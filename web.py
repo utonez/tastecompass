@@ -19,7 +19,7 @@ from datetime import date
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
-from tastecompass import dna, explain, narrate, panel
+from tastecompass import dna, explain, narrate, panel, redact
 from tastecompass.agent import ROOT, TasteCompassAgent, load_data
 from tastecompass.planner import AFTER_OFFER, CHECKLIST, pick_deadline
 from tastecompass.qloo import QlooError, make_client
@@ -133,7 +133,7 @@ def make_handler(app: App):
             except (BrokenPipeError, ConnectionResetError):
                 pass  # browser went away mid-stream
             except (ValueError, KeyError) as e:
-                emit("error", str(e))
+                emit("error", redact(str(e)))
 
         def do_POST(self):
             if self.path not in ("/api/run", "/api/chat", "/api/narrate"):
@@ -144,10 +144,10 @@ def make_handler(app: App):
                 if self.path == "/api/chat":
                     return self._chat(body)
                 self._json(200, app.narrate(body) if self.path == "/api/narrate" else app.run(body))
-            except (ValueError, KeyError) as e:
-                self._json(400, {"error": str(e)})
             except QlooError as e:
-                self._json(502, {"error": f"Qloo: {e}"})
+                self._json(502, {"error": redact(f"Qloo: {e}")})
+            except (ValueError, KeyError) as e:
+                self._json(400, {"error": redact(str(e))})
 
         def log_message(self, fmt, *args):
             print(f"[web] {self.address_string()} {fmt % args}")

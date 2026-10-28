@@ -49,7 +49,7 @@ class QlooClient:
     def __init__(self, api_key: str, base_url: str = DEFAULT_BASE_URL, timeout: float = 12.0):
         if not api_key:
             raise QlooError("QLOO_API_KEY is empty")
-        self.api_key = api_key
+        self.api_key = api_key.strip()
         self.base_url = base_url.rstrip("/")
         self.timeout = timeout
         self._cache: dict[str, dict] = {}
@@ -65,6 +65,9 @@ class QlooClient:
             data = json.loads(cache_file.read_text(encoding="utf-8"))
             self._cache[url] = data
             return data
+        if any(ch.isspace() or not ch.isprintable() for ch in self.api_key):
+            # never echo the key: urllib's own error message would include it
+            raise QlooError("QLOO_API_KEY contains a space or line break - re-paste it without extra characters")
         req = urllib.request.Request(url, headers={"X-Api-Key": self.api_key, "Accept": "application/json"})
         delay = 0.5
         timeouts = 0

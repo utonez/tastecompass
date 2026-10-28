@@ -25,3 +25,20 @@ def _load_env(path: Path) -> None:
 
 
 _load_env(Path(__file__).resolve().parent.parent / ".env")
+
+# Keys pasted into a hosting dashboard often carry a trailing newline or space, which makes
+# every HTTP request fail ("Invalid header value"). Normalise them once, here.
+SECRET_VARS = ("QLOO_API_KEY", "OPENAI_API_KEY", "ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN")
+for _k in SECRET_VARS + ("QLOO_BASE_URL", "OPENAI_BASE_URL", "OPENAI_MODEL"):
+    if os.environ.get(_k):
+        os.environ[_k] = os.environ[_k].strip().strip('"').strip("'")
+
+
+def redact(text: str) -> str:
+    """Remove any configured secret from a message before it can reach a browser or log."""
+    text = str(text)
+    for k in SECRET_VARS:
+        v = os.environ.get(k)
+        if v and len(v) >= 6:
+            text = text.replace(v, "[redacted]")
+    return text

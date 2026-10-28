@@ -26,7 +26,7 @@ def configured() -> bool:
 def chat(body: dict) -> dict:
     """POST /chat/completions (model filled in if missing); returns choices[0].message. Raises OpenAIError."""
     req = urllib.request.Request(API_URL, data=json.dumps({"model": MODEL, **body}).encode("utf-8"), method="POST", headers={
-        "Authorization": f"Bearer {os.environ.get('OPENAI_API_KEY', '')}",
+        "Authorization": f"Bearer {os.environ.get('OPENAI_API_KEY', '').strip()}",
         "Content-Type": "application/json",
     })
     try:
