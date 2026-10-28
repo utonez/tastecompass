@@ -4,7 +4,8 @@
 
 Most study-abroad advice ranks universities. TasteCompass also asks the question students actually live with for a year: *will I like living there?* It reads your taste in music, films, food and hobbies through Qloo, scores every major UK student city on one taste map, then combines that with academic fit, budget and English requirements, using programme facts checked on official course pages.
 
-- **Live demo:** _add the Render URL here_
+- **Live demo:** https://tastecompass.onrender.com (homepage) · https://tastecompass.onrender.com/app (agent)
+- Hosted on a free plan: if it has been idle, the first load can take up to a minute while the server wakes up.
 - **Homepage:** `/` · **Agent UI:** `/app`
 
 ## Why an agent, and why Qloo

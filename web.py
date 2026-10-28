@@ -14,6 +14,7 @@ POST /api/chat    -> Claude explanations, server-sent events (optional)
 import argparse
 import json
 import os
+import threading
 from dataclasses import asdict
 from datetime import date
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -84,6 +85,29 @@ class App:
         for prog in p["programmes"]:
             prog["voices"] = voices.get(prog["program_id"], {})
         return {**p, "narrated": True}
+
+
+# The homepage's three example buttons. Running them once at startup fills the Qloo cache, so a
+# judge's first click is fast even right after the free host wakes up (its disk cache is wiped then).
+_TASTES = ["Radiohead", "Specialty coffee", "Banksy", "Hiking", "Studio Ghibli"]
+WARM_PROFILES = [
+    {"interests": _TASTES, "field_interests": ["fintech", "blockchain", "data science"], "tuition_budget_gbp": 38000,
+     "ielts": {"overall": 7.0, "min_component": 6.5}, "target_intake": 2027, "scope": {"country": "UK"}, "top_n": 3},
+    {"interests": _TASTES, "field_interests": ["fintech", "blockchain", "data science"], "tuition_budget_gbp": 42000,
+     "ielts": {"overall": 7.0, "min_component": 6.5}, "target_intake": 2027, "scope": {"country": "UK", "program_ids": ["ucl-edt", "kcl-cf"]}},
+    {"interests": ["Arctic Monkeys", "Harry Potter", "Hiking", "Specialty coffee"], "field_interests": ["business analytics", "fintech"],
+     "tuition_budget_gbp": 40000, "ielts": {"overall": 7.0, "min_component": 6.5}, "target_intake": 2027,
+     "scope": {"country": "UK", "city": "edinburgh"}, "top_n": 3},
+]
+
+
+def warm_up(app: "App") -> None:
+    for prof in WARM_PROFILES:
+        try:
+            app.run(prof)
+        except Exception as e:  # warming is best-effort
+            print(f"[warm-up] skipped one example: {redact(str(e))[:120]}")
+    print("[warm-up] example runs cached")
 
 
 def make_handler(app: App):
@@ -165,6 +189,8 @@ def main():
     print(f"TasteCompass on http://{'localhost' if args.host in ('127.0.0.1', '0.0.0.0') else args.host}:{args.port}  (Qloo client: {app.kind}; "
           f"Ask: {app.llm_detail if app.llm_ok else 'off - ' + app.llm_detail}; "
           f"panel voices: {app.narrator_detail if app.narrator_ok else 'templates - ' + app.narrator_detail})")
+    if app.kind == "live":
+        threading.Thread(target=warm_up, args=(app,), daemon=True).start()
     ThreadingHTTPServer((args.host, args.port), make_handler(app)).serve_forever()
 
 
