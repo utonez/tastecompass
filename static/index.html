@@ -1,0 +1,1102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TasteCompass</title>
+<style>
+:root {
+  --bg: #f6f4ef; --panel: #ffffff; --ink: #1f2328; --ink2: #52514e; --muted: #6b7078; --line: #e3e0d8;
+  --accent: #2f6b5a; --accent-soft: #e2efe9; --accent-mid: #8fbcaf; --warn: #9a5b00; --warn-soft: #fff2dc;
+  --bad: #a33a2b; --bar: #2f6b5a; --bar-bg: #ece9e1;
+  /* status palette (fixed): good / warning / critical, always paired with an icon + word */
+  --st-good: #0ca30c; --st-warn: #fab219; --st-crit: #d03b3b;
+  --st-good-bg: rgba(12,163,12,.13); --st-warn-bg: rgba(250,178,25,.20); --st-crit-bg: rgba(208,59,59,.13);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #15171a; --panel: #1e2125; --ink: #e8e6e1; --ink2: #c3c2b7; --muted: #9aa0a8; --line: #30343a;
+    --accent: #7cc4ad; --accent-soft: #23362f; --accent-mid: #3f6b5e; --warn: #f0b860; --warn-soft: #3a2f1c;
+    --bad: #f08a7a; --bar: #7cc4ad; --bar-bg: #2b2f34;
+    --st-good-bg: rgba(12,163,12,.22); --st-warn-bg: rgba(250,178,25,.18); --st-crit-bg: rgba(208,59,59,.25);
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink);
+  font: 15px/1.5 system-ui, -apple-system, "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", sans-serif; }
+a { color: var(--accent); }
+h2 { font-size: 16px; margin: 0 0 12px; }
+h3 { font-size: 15px; margin: 0; }
+.meta { color: var(--muted); font-size: 13px; }
+.num { font-variant-numeric: tabular-nums; }
+.unv { color: var(--warn); }
+.info { display: inline-grid; place-items: center; width: 16px; height: 16px; border-radius: 50%; border: 1px solid var(--line);
+  font-size: 10px; color: var(--muted); cursor: help; vertical-align: 2px; margin-left: 4px; font-weight: 600; }
+
+/* ---- shell ---- */
+header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 24px; max-width: 1400px; margin: 0 auto; }
+header h1 { margin: 0; font-size: 22px; }
+header h1 span.logo { color: var(--accent); }
+.badge { display: inline-block; font-size: 12px; padding: 2px 8px; border-radius: 999px; margin-left: 8px;
+  background: var(--accent-soft); color: var(--accent); vertical-align: middle; font-weight: 600; }
+.badge.mock { background: var(--warn-soft); color: var(--warn); }
+main { display: grid; grid-template-columns: 320px minmax(0, 1fr); gap: 20px; padding: 0 24px 48px; max-width: 1400px; margin: 0 auto; }
+body.nosidebar main { grid-template-columns: minmax(0, 1fr); }
+body.nosidebar #form { display: none; }
+@media (max-width: 900px) { main { grid-template-columns: minmax(0, 1fr); padding: 0 16px 40px; } header { padding: 12px 16px; } }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px; min-width: 0; }
+
+/* ---- profile form ---- */
+form.panel { position: sticky; top: 12px; align-self: start; max-height: calc(100vh - 24px); overflow: auto; }
+@media (max-width: 900px) { form.panel { position: static; max-height: none; } }
+fieldset { border: 0; padding: 0; margin: 0 0 14px; }
+legend, label.h { font-weight: 600; font-size: 13px; margin-bottom: 5px; display: block; }
+input[type=text], input[type=number], input[type=date], select, textarea {
+  width: 100%; padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); font: inherit; }
+textarea { resize: vertical; min-height: 54px; }
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.radios { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 8px; }
+/* scope: segmented control, the first decision on the form */
+.seg { display: grid; grid-template-columns: repeat(4, auto); background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 3px; gap: 2px; }
+.seg label { margin: 0; text-align: center; font-size: 12.5px; padding: 7px 6px; white-space: nowrap; border-radius: 8px; cursor: pointer; color: var(--ink2); font-weight: 500; }
+.seg input { position: absolute; opacity: 0; pointer-events: none; }
+.seg label:has(input:checked) { background: var(--panel); color: var(--accent); font-weight: 700; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+.seg label:has(input:focus-visible) { outline: 2px solid var(--accent-mid); }
+.scopehint { font-size: 12px; color: var(--muted); margin: 6px 2px 0; min-height: 1.4em; }
+.examples { font-size: 12.5px; color: var(--muted); margin: 0 0 16px; display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.examples button { padding: 3px 10px; border-radius: 999px; font-size: 12.5px; }
+details.adv-form { margin: 0 0 14px; border-top: 1px solid var(--line); padding-top: 10px; }
+details.adv-form summary { cursor: pointer; font-size: 13px; font-weight: 600; color: var(--ink2); list-style: none; }
+details.adv-form summary::-webkit-details-marker { display: none; }
+details.adv-form summary::before { content: "▸ "; } details.adv-form[open] summary::before { content: "▾ "; }
+details.adv-form[open] summary { margin-bottom: 10px; }
+.radios label, .checks label { display: flex; gap: 6px; align-items: center; padding: 2px 0; font-size: 13px; }
+.checks label { align-items: flex-start; line-height: 1.35; padding: 4px 0; }
+.checks label input { margin-top: 3px; }
+.checks { max-height: 170px; overflow: auto; border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; margin-top: 6px; }
+.slider { display: grid; grid-template-columns: 64px 1fr 34px; align-items: center; gap: 8px; font-size: 13px; }
+.slider output { text-align: right; font-variant-numeric: tabular-nums; color: var(--muted); }
+input[type=range] { width: 100%; accent-color: var(--accent); }
+.btns { display: flex; gap: 8px; flex-wrap: wrap; }
+button { font: inherit; border-radius: 8px; padding: 8px 14px; cursor: pointer; border: 1px solid var(--line); background: var(--panel); color: var(--ink); }
+button:hover { border-color: var(--accent-mid); }
+button.primary { background: var(--accent); color: var(--panel); border-color: var(--accent); font-weight: 600; width: 100%; padding: 10px; }
+button.small { padding: 5px 10px; font-size: 13px; }
+button:disabled { opacity: .6; cursor: not-allowed; }
+.live { font-size: 12px; color: var(--muted); margin: 8px 0 0; }
+.live.busy { color: var(--accent); }
+
+/* ---- tabs ---- */
+#results { min-width: 0; display: flex; flex-direction: column; gap: 14px; }
+nav.tabbar { position: sticky; top: 0; z-index: 5; display: flex; gap: 4px; align-items: center; background: var(--bg); padding: 6px 0;
+  overflow-x: auto; scrollbar-width: none; }
+nav.tabbar button { border: 0; background: transparent; padding: 8px 14px; border-radius: 999px; color: var(--ink2); white-space: nowrap; font-weight: 500; }
+nav.tabbar button.on { background: var(--accent); color: var(--panel); }
+nav.tabbar button .count { font-size: 11px; opacity: .75; margin-left: 4px; }
+nav.tabbar .spacer { flex: 1; }
+.pane { display: flex; flex-direction: column; gap: 14px; }
+.pane[hidden] { display: none; }
+.banner { background: var(--warn-soft); color: var(--warn); border-radius: 10px; padding: 8px 14px; font-size: 13px; }
+.error { background: var(--warn-soft); color: var(--bad); border-radius: 10px; padding: 10px 14px; }
+.empty { color: var(--muted); text-align: center; padding: 60px 20px; }
+.grid2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; }
+.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 1100px) { .grid3 { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+@media (max-width: 700px) { .grid2, .grid3 { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---- shared marks ---- */
+.bar { height: 8px; border-radius: 4px; background: var(--bar-bg); overflow: hidden; }
+.bar > i { display: block; height: 100%; background: var(--bar); border-radius: 4px; }
+.bar.unk > i { background: repeating-linear-gradient(45deg, var(--muted) 0 3px, transparent 3px 6px); }
+.ring { position: relative; flex: none; }
+.ring svg { display: block; transform: rotate(-90deg); }
+.ring .val { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; line-height: 1.05; font-weight: 700; }
+.ring .val small { display: block; font-size: 10px; font-weight: 500; color: var(--muted); }
+.kpis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 560px) { .kpis { grid-template-columns: minmax(0, 1fr); } }
+.kpi { background: var(--bg); border-radius: 10px; padding: 10px 12px; }
+.kpi .k { font-size: 12px; color: var(--muted); }
+.kpi .v { font-size: 22px; font-weight: 700; line-height: 1.2; }
+.kpi .s { font-size: 12px; color: var(--ink2); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { background: var(--accent-soft); color: var(--accent); border-radius: 999px; padding: 3px 10px; font-size: 13px; }
+.chip.plain { background: var(--bg); color: var(--ink2); }
+.chip.warn { background: var(--warn-soft); color: var(--warn); }
+.hbars { display: grid; gap: 6px; }
+.hbar { display: grid; grid-template-columns: 96px minmax(0, 1fr) 42px; gap: 10px; align-items: center; font-size: 13px; border-radius: 8px; }
+.hbar .bar { height: 12px; }
+button.hbar { width: 100%; text-align: left; border: 0; padding: 4px 6px; background: transparent; }
+button.hbar:hover { background: var(--bg); }
+button.hbar.dim .bar > i { background: var(--accent-mid); }
+button.hbar.on { background: var(--accent-soft); }
+.mini4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(96px, 1fr)); gap: 6px 12px; }
+.mini4 .lab { font-size: 11px; color: var(--muted); display: flex; justify-content: space-between; }
+.mini4 .bar { height: 6px; margin-top: 3px; }
+
+/* ---- overview ---- */
+.hero { display: flex; gap: 20px; align-items: center; }
+@media (max-width: 700px) { .hero { flex-direction: column; align-items: flex-start; } }
+.hero .eyebrow { font-size: 12px; text-transform: uppercase; letter-spacing: .6px; color: var(--accent); font-weight: 700; }
+.hero h2 { font-size: 21px; margin: 2px 0 2px; }
+.topcard { cursor: pointer; display: flex; flex-direction: column; gap: 10px; }
+.topcard:hover { border-color: var(--accent-mid); }
+.topcard .head { display: flex; gap: 12px; align-items: center; }
+.archetype { font-size: 20px; font-weight: 700; color: var(--accent); }
+
+/* ---- programmes ---- */
+.prog { display: flex; flex-direction: column; gap: 12px; }
+.prog .head { display: flex; gap: 14px; align-items: center; }
+.prog .head .rk { font-size: 12px; color: var(--muted); }
+.prog details summary { cursor: pointer; font-size: 13px; color: var(--accent); list-style: none; }
+.prog details summary::-webkit-details-marker { display: none; }
+.prog details summary::before { content: "▸ "; }
+.prog details[open] summary::before { content: "▾ "; }
+dl.facts { display: grid; grid-template-columns: 84px minmax(0, 1fr); gap: 4px 10px; margin: 8px 0 0; font-size: 13px; }
+dl.facts dt { color: var(--muted); }
+dl.facts dd { margin: 0; overflow-wrap: anywhere; }
+.note { font-size: 12px; padding: 5px 10px; border-radius: 8px; }
+.note.why { background: var(--accent-soft); color: var(--accent); }
+.note.warn { background: var(--warn-soft); color: var(--warn); }
+.tablewrap { overflow-x: auto; }
+table.cmp { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 860px; }
+table.cmp th, table.cmp td { padding: 7px 6px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: middle; }
+table.cmp td:nth-child(3) { min-width: 200px; }
+table.cmp th { font-size: 12px; color: var(--muted); font-weight: 600; white-space: nowrap; user-select: none; }
+table.cmp th[data-sort] { cursor: pointer; }
+table.cmp th[data-sort]:hover { color: var(--ink); }
+table.cmp th.on { color: var(--accent); }
+table.cmp td.n { font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+table.cmp tr.out td { color: var(--muted); }
+table.cmp .mini { width: 46px; display: inline-block; vertical-align: middle; margin-right: 6px; }
+table.cmp .mini .bar { height: 6px; }
+.delta { font-size: 11px; margin-left: 4px; }
+.delta.up { color: var(--accent); } .delta.down { color: var(--bad); }
+.compare { display: grid; gap: 12px; margin-top: 14px; }
+.compare .col { border: 1px solid var(--line); border-radius: 10px; padding: 12px; font-size: 13px; min-width: 0; }
+
+.unis { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 8px; }
+.uni { display: flex; flex-direction: column; gap: 2px; align-items: flex-start; border: 1px solid var(--line); border-radius: 10px;
+  padding: 10px 12px; text-decoration: none; color: var(--ink); font-size: 13px; }
+.uni:hover { border-color: var(--accent-mid); }
+.uni .chip { margin-top: 6px; font-size: 12px; }
+/* ---- cities ---- */
+ol.places { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+ol.places li { display: grid; grid-template-columns: minmax(0, 1fr) 70px; gap: 2px 10px; align-items: center; font-size: 13px; }
+ol.places .why { grid-column: 1 / 3; font-size: 12px; color: var(--muted); margin-top: -2px; }
+.week { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; }
+@media (max-width: 1000px) { .week { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .week { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.day { background: var(--bg); border-radius: 10px; padding: 8px 10px; font-size: 12px; min-width: 0; }
+.day h4 { margin: 0 0 6px; font-size: 13px; }
+.day.weekend { background: var(--accent-soft); }
+.slot { margin-bottom: 8px; overflow-wrap: anywhere; }
+.slot .when { display: block; font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .4px; }
+
+/* ---- panel ---- */
+.matrix { width: 100%; border-collapse: separate; border-spacing: 4px; font-size: 13px; }
+.matrix th { font-size: 12px; color: var(--muted); font-weight: 600; text-align: center; padding: 4px; }
+.matrix th.rowh { text-align: left; min-width: 160px; }
+.matrix td { padding: 0; }
+.cell { width: 100%; border: 0; border-radius: 8px; padding: 9px 6px; display: flex; gap: 6px; justify-content: center; align-items: center; font-size: 12px; font-weight: 600; }
+.cell .ic { font-size: 14px; }
+.cell.strong { background: var(--st-good-bg); } .cell.strong .ic { color: var(--st-good); }
+.cell.mixed { background: var(--bar-bg); } .cell.mixed .ic { color: var(--muted); }
+.cell.concern { background: var(--st-crit-bg); } .cell.concern .ic { color: var(--st-crit); }
+.cell.unverified { background: var(--st-warn-bg); } .cell.unverified .ic { color: var(--warn); }
+.cell.sel { outline: 2px solid var(--accent); outline-offset: 1px; }
+.rowbtn { border: 0; background: transparent; padding: 4px 6px; text-align: left; width: 100%; border-radius: 8px; }
+.rowbtn.sel { background: var(--accent-soft); }
+.chairh { font-size: 12px; font-weight: 600; white-space: nowrap; color: var(--ink2); padding: 0 6px; }
+.advisors { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 1100px) { .advisors { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .advisors { grid-template-columns: minmax(0, 1fr); } }
+.adv { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; font-size: 13px; min-width: 0; }
+.adv.focus { border-color: var(--accent); }
+.adv .who { display: flex; justify-content: space-between; gap: 6px; align-items: center; font-weight: 600; }
+.adv ul { margin: 6px 0 0; padding-left: 16px; color: var(--ink2); }
+.adv .voice { margin: 6px 0 0; font-style: italic; }
+.verdict { font-size: 11px; font-weight: 600; padding: 1px 8px; border-radius: 999px; white-space: nowrap; }
+.verdict.strong { background: var(--st-good-bg); } .verdict.mixed { background: var(--bar-bg); }
+.verdict.concern { background: var(--st-crit-bg); } .verdict.unverified { background: var(--st-warn-bg); }
+.chair { background: var(--bg); border-radius: 10px; padding: 10px 12px; font-size: 14px; }
+
+/* ---- plan / gantt ---- */
+.gantt { display: grid; grid-template-columns: 190px minmax(0, 1fr); row-gap: 6px; font-size: 12px; }
+@media (max-width: 700px) { .gantt { grid-template-columns: 110px minmax(0, 1fr); } }
+.gantt .lab { padding-right: 10px; display: flex; flex-direction: column; justify-content: center; min-height: 44px; overflow: hidden; }
+.gantt .lab b { font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.gantt .track { position: relative; min-height: 44px; border-left: 1px solid var(--line); }
+.gantt .track::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; border-top: 1px solid var(--line); }
+.gantt .axis { position: relative; height: 20px; border-left: 1px solid transparent; }
+.gantt .tick { position: absolute; top: 0; font-size: 11px; color: var(--muted); transform: translateX(-50%); white-space: nowrap; }
+.gantt .grid { position: absolute; top: 0; bottom: 0; border-left: 1px dashed var(--line); }
+.gantt .span { position: absolute; top: calc(50% - 3px); height: 6px; border-radius: 3px; background: var(--accent-soft); }
+.gantt .today { position: absolute; top: -4px; bottom: -4px; border-left: 2px solid var(--st-crit); }
+.mk { position: absolute; top: 50%; width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 50%; border: 2px solid var(--accent); background: var(--panel); cursor: default; }
+.mk.done { background: var(--accent); }
+.mk.late { border-color: var(--st-crit); }
+.mk.dl { width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 2px; transform: rotate(45deg); background: var(--accent); }
+.legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--muted); align-items: center; }
+.legend .mk { position: static; margin: 0 4px 0 0; display: inline-block; vertical-align: -2px; }
+.legend .todayk { display: inline-block; width: 0; height: 12px; border-left: 2px solid var(--st-crit); margin-right: 4px; vertical-align: -2px; }
+ol.steps { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 4px; font-size: 13px; }
+ol.steps label { display: flex; gap: 8px; align-items: baseline; }
+ol.steps input { accent-color: var(--accent); }
+ol.steps time { color: var(--muted); font-variant-numeric: tabular-nums; min-width: 84px; }
+ol.steps li.done span { text-decoration: line-through; color: var(--muted); }
+.late-tag { color: var(--bad); font-size: 11px; margin-left: 4px; }
+ul.check { list-style: none; padding: 0; margin: 0; display: grid; gap: 4px; font-size: 13px; }
+ul.check label { display: flex; gap: 8px; align-items: flex-start; }
+ul.check input { accent-color: var(--accent); }
+.meter { display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--muted); }
+.meter .bar { flex: 1; }
+ol.steps { margin: 4px 0 0; padding-left: 22px; font-size: 13.5px; }
+ol.steps li { margin: 0 0 7px; padding-left: 4px; }
+ol.steps li::marker { color: var(--accent); font-weight: 700; }
+ol.steps .meta { display: block; }
+details.trace summary { cursor: pointer; font-weight: 600; font-size: 14px; }
+details.trace ol { font-size: 12px; color: var(--muted); font-family: ui-monospace, Consolas, monospace; }
+.toolbar { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+/* ---- chat ---- */
+#chat .log { display: flex; flex-direction: column; gap: 10px; margin: 12px 0; max-height: 60vh; overflow: auto; }
+#chat .log:empty { display: none; }
+.msg { padding: 10px 12px; border-radius: 10px; font-size: 14px; line-height: 1.6; overflow-wrap: anywhere; }
+.msg.user { background: var(--accent-soft); align-self: flex-end; max-width: 85%; }
+.msg.bot { background: var(--bg); }
+.msg.bot ul, .msg.bot ol { margin: 4px 0 8px; padding-left: 20px; }
+.msg.bot li { margin: 2px 0; }
+.msg.bot p { margin: 0 0 8px; } .msg.bot p:last-child { margin-bottom: 0; }
+.msg.bot .mh { font-weight: 700; margin: 8px 0 4px; }
+.msg.bot code { font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; background: var(--panel); padding: 1px 5px; border-radius: 5px; }
+.msg.bot table { border-collapse: collapse; margin: 6px 0 8px; font-size: 13px; }
+.msg.bot th, .msg.bot td { border-bottom: 1px solid var(--line); padding: 4px 10px 4px 0; text-align: left; }
+.msg.bot th { color: var(--muted); font-weight: 600; }
+.msg .tool { font-size: 12px; color: var(--muted); font-family: ui-monospace, Consolas, monospace; margin: 4px 0; }
+.msg.err { background: var(--warn-soft); color: var(--bad); }
+.divider { font-size: 12px; color: var(--muted); text-align: center; }
+.ask { display: flex; gap: 8px; margin-top: 4px; }
+.ask input { flex: 1; padding: 10px 14px; border-radius: 10px; }
+.ask button { padding: 0 20px; border-radius: 10px; background: var(--accent); color: var(--panel); border-color: var(--accent); font-weight: 600; }
+.qchips { gap: 6px; margin: 2px 0 14px; }
+.qchips button { font-size: 13px; padding: 5px 12px; border-radius: 999px; background: var(--bg); color: var(--ink2); }
+.qchips button:hover { color: var(--accent); }
+#chat h2 { margin-bottom: 10px; }
+.qchips button { font-size: 12px; padding: 4px 10px; border-radius: 999px; }
+
+/* ---- tooltip ---- */
+#tip { position: fixed; z-index: 50; pointer-events: none; background: var(--ink); color: var(--panel); font-size: 12px; padding: 6px 9px;
+  border-radius: 6px; max-width: 280px; line-height: 1.4; opacity: 0; transition: opacity .1s; }
+#tip.show { opacity: 1; }
+</style>
+</head>
+<body>
+<header>
+  <h1><a href="/" style="color:inherit;text-decoration:none" title="About TasteCompass"><span class="logo">◎</span> TasteCompass</a> <span id="clientBadge" class="badge">…</span></h1>
+  <span class="meta" id="tagline">Your UK master's, matched to your taste</span>
+</header>
+<main>
+  <form id="form" class="panel" autocomplete="off">
+    <div class="examples">Try:
+      <button type="button" class="small" data-preset="b" data-tip="Country decided - let the agent pick city and programme">🎸 Indie fan</button>
+      <button type="button" class="small" data-preset="c" data-tip="City decided - only programmes in Edinburgh">🏰 Edinburgh</button>
+      <button type="button" class="small" data-preset="d" data-tip="Programmes decided (UCL + KCL) - check fit, plan deadlines, and see better alternatives">🎓 My UCL + KCL picks</button>
+    </div>
+    <fieldset>
+      <legend>What have you already decided?</legend>
+      <div class="seg" role="radiogroup">
+        <label><input type="radio" name="scope" value="A"> Nothing yet</label>
+        <label><input type="radio" name="scope" value="B" checked> Country</label>
+        <label><input type="radio" name="scope" value="C"> City</label>
+        <label><input type="radio" name="scope" value="D"> Programme</label>
+      </div>
+      <p class="scopehint" id="scopeHint"></p>
+      <select id="city" hidden></select>
+      <div id="progs" class="checks" hidden></div>
+    </fieldset>
+    <fieldset>
+      <label class="h" for="interests">Your tastes <span class="info" data-tip="Comma-separated: music, films, books, hobbies. Updates when you leave the box.">i</span></label>
+      <textarea id="interests" placeholder="Radiohead, Specialty coffee, Hiking"></textarea>
+    </fieldset>
+    <fieldset>
+      <label class="h" for="fields">Fields to study</label>
+      <input type="text" id="fields" placeholder="fintech, data science">
+    </fieldset>
+    <fieldset class="row">
+      <div><label class="h" for="budget">Budget £/yr</label><input type="number" id="budget" min="0" step="500"></div>
+      <div><label class="h" for="intake">Intake</label><input type="number" id="intake" min="2025" max="2035"></div>
+    </fieldset>
+    <fieldset class="row">
+      <div><label class="h" for="ieltsO">IELTS overall</label><input type="number" id="ieltsO" min="0" max="9" step="0.5"></div>
+      <div><label class="h" for="ieltsC">Lowest band</label><input type="number" id="ieltsC" min="0" max="9" step="0.5"></div>
+    </fieldset>
+    <details class="adv-form" open>
+      <summary>What matters to you (score weights)</summary>
+      <fieldset>
+        <legend>Weights <span class="info" data-tip="How much each part counts in the fit score; normalised automatically. Results update as you drag.">i</span></legend>
+        <div id="weights"></div>
+      </fieldset>
+      <fieldset class="row">
+        <div><label class="h" for="topn">Show top</label><input type="number" id="topn" min="1" max="11" value="3"></div>
+        <div><label class="h" for="today">Plan from</label><input type="date" id="today"></div>
+      </fieldset>
+    </details>
+    <button type="submit" class="primary" id="go">Find my programmes</button>
+    <p class="live" id="live">Any change updates the results instantly.</p>
+  </form>
+
+  <section id="results">
+    <nav class="tabbar" id="tabbar">
+      <button type="button" id="toggleSide" class="small" data-tip="Show / hide your profile">☰</button>
+      <button type="button" data-tab="overview" class="on">Overview</button>
+      <button type="button" data-tab="cities">Cities</button>
+      <button type="button" data-tab="programmes">Programmes<span class="count" id="cnt-programmes"></span></button>
+      <button type="button" data-tab="panel">Panel</button>
+      <button type="button" data-tab="plan">Plan</button>
+      <button type="button" data-tab="ask">Ask</button>
+      <span class="spacer"></span>
+      <button type="button" class="small" id="share" data-tip="Copy a link that reopens this exact profile">🔗 Share</button>
+      <button type="button" class="small" id="dl" data-tip="Download the full report as Markdown">⬇ Report</button>
+    </nav>
+    <div id="banner"></div>
+    <div class="pane" id="pane-overview"><div class="panel empty">Loading the example…</div></div>
+    <div class="pane" id="pane-cities" hidden></div>
+    <div class="pane" id="pane-programmes" hidden></div>
+    <div class="pane" id="pane-panel" hidden></div>
+    <div class="pane" id="pane-plan" hidden></div>
+    <div class="pane" id="pane-ask" hidden></div>
+  </section>
+</main>
+<div id="tip" role="tooltip"></div>
+
+<script>
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const list = s => s.split(/[,,\n]/).map(x => x.trim()).filter(Boolean);
+const pct = v => Math.round(Math.max(0, Math.min(1, v)) * 100);
+const days = (from, to) => Math.round((new Date(to + "T00:00:00Z") - new Date(from + "T00:00:00Z")) / 864e5);
+
+const MODE_TEXT = { A: "Nothing decided yet", B: "Country decided: UK", C: "City decided", D: "Programmes decided" };
+const COMP = { taste: "Taste", academic: "Academic", budget: "Budget", language: "Language" };
+const DEFAULT_W = { taste: 0.35, academic: 0.35, budget: 0.20, language: 0.10 };
+const VERDICT_ICON = { strong: "✓", mixed: "~", concern: "!", unverified: "?" };
+
+const PRESETS = {
+  b: { interests: ["Radiohead", "Specialty coffee", "Banksy", "Hiking", "Studio Ghibli"],
+       field_interests: ["fintech", "blockchain", "data science"], tuition_budget_gbp: 38000,
+       ielts: { overall: 7.0, min_component: 6.5 }, target_intake: 2027, scope: { country: "UK" }, top_n: 3 },
+  c: { interests: ["Arctic Monkeys", "Harry Potter", "Hiking", "Specialty coffee"],
+       field_interests: ["business analytics", "fintech"], tuition_budget_gbp: 40000,
+       ielts: { overall: 7.0, min_component: 6.5 }, target_intake: 2027, scope: { country: "UK", city: "edinburgh" }, top_n: 3 },
+  d: { interests: ["Radiohead", "Specialty coffee", "Banksy", "Hiking", "Studio Ghibli"],
+       field_interests: ["fintech", "blockchain", "data science"], tuition_budget_gbp: 42000,
+       ielts: { overall: 7.0, min_component: 6.5 }, target_intake: 2027,
+       scope: { country: "UK", program_ids: ["ucl-edt", "kcl-cf"] } },
+};
+
+let META = null, LAST = null, TAB = "overview";
+let PREV_RANK = {}, RANK_DELTA = {};          // programme id -> rank in the previous run / change since then
+let SORT = { key: "fit", dir: -1 };
+const COMPARE = new Set();                    // programme ids ticked for side-by-side view (max 3)
+const MAX_COMPARE = 3;
+let CITY_SEL = null;                          // city shown in the Cities tab
+let PANEL_SEL = null, PANEL_ADV = null;       // programme / advisor focused in the Panel tab
+const cityName = id => META.cities.find(c => c.id === id)?.name || id;
+
+// ---------------------------------------------------------------------------------------------------
+// small building blocks
+// ---------------------------------------------------------------------------------------------------
+function bar(v, unk = false) { return `<div class="bar ${unk ? "unk" : ""}"><i style="width:${pct(v)}%"></i></div>`; }
+function ring(v, size = 64, label = "fit") {     // meter: one value against 1.0, same-hue track
+  const r = size / 2 - 5, c = 2 * Math.PI * r;
+  return `<div class="ring" style="width:${size}px;height:${size}px"><svg width="${size}" height="${size}" aria-hidden="true">
+    <circle cx="${size / 2}" cy="${size / 2}" r="${r}" fill="none" stroke="var(--bar-bg)" stroke-width="7"/>
+    <circle cx="${size / 2}" cy="${size / 2}" r="${r}" fill="none" stroke="var(--accent)" stroke-width="7" stroke-linecap="round"
+      stroke-dasharray="${(c * Math.max(0, Math.min(1, v))).toFixed(1)} ${c.toFixed(1)}"/></svg>
+    <div class="val" style="font-size:${Math.round(size / 3.6)}px"><div>${Math.round(v * 100)}${size >= 80 ? `<small>${label}</small>` : ""}</div></div></div>`;
+}
+const money = v => v ? "£" + v.toLocaleString("en-GB") : `<span class="unv">n/a</span>`;
+const feeChip = p => p.fee_overseas_gbp ? `<span class="chip plain" data-tip="Overseas tuition">💷 ${money(p.fee_overseas_gbp)}</span>`
+                                        : `<span class="chip warn" data-tip="Fee not on the official page">fee n/a</span>`;
+function ielts(p) {
+  const e = p.english || {};
+  return e.ielts_overall ? `IELTS ${e.ielts_overall} (min ${e.ielts_min_component ?? "?"})` : `<span class="unv">${esc(e.note || "not stated")}</span>`;
+}
+const isUnk = (f, k) => f.unknown.some(u => u.startsWith(k));
+function mini4(f) {
+  return `<div class="mini4">${Object.keys(COMP).map(k => `<div data-tip="${COMP[k]} ${f.components[k].toFixed(2)}${isUnk(f, k) ? " · official data missing, scored neutral" : ""}">
+    <div class="lab"><span>${COMP[k]}</span><span class="num">${isUnk(f, k) ? "?" : Math.round(f.components[k] * 100)}</span></div>${bar(f.components[k], isUnk(f, k))}</div>`).join("")}</div>`;
+}
+function deadlineChip(pid) {
+  const d = LAST.deadlines[pid];
+  if (!d?.date) return /^Rolling/.test(d?.label || "") ? `<span class="chip plain" data-tip="${esc(d.label)}">rolling admissions</span>` : `<span class="chip warn">deadline n/a</span>`;
+  if (d.passed) return `<span class="chip warn" data-tip="${esc(d.date)} has passed - earlier cycle">deadline passed</span>`;
+  return `<span class="chip plain" data-tip="${esc(d.date)} · ${esc(d.label)}">⏳ ${days(LAST.today, d.date)} days</span>`;
+}
+
+// ---------------------------------------------------------------------------------------------------
+// profile form
+// ---------------------------------------------------------------------------------------------------
+function buildWeights() {
+  $("#weights").innerHTML = Object.keys(DEFAULT_W).map(k => `
+    <div class="slider"><span>${COMP[k]}</span>
+      <input type="range" id="w_${k}" min="0" max="1" step="0.05" value="${DEFAULT_W[k]}">
+      <output id="o_${k}">${DEFAULT_W[k].toFixed(2)}</output></div>`).join("");
+  for (const k in DEFAULT_W) $("#w_" + k).addEventListener("input", e => $("#o_" + k).textContent = (+e.target.value).toFixed(2));
+}
+const SCOPE_HINT = {
+  A: "The agent ranks cities by your taste, then programmes. (Our data covers the UK for now.)",
+  B: "UK is fixed. The agent picks the city and programme for you.",
+  C: "Only programmes in this city are ranked:",
+  D: "Tick your programmes. The agent checks fit, plans deadlines and flags better options:",
+};
+function syncScope() {
+  const m = $("input[name=scope]:checked").value;
+  $("#city").hidden = m !== "C";
+  $("#progs").hidden = m !== "D";
+  $("#scopeHint").textContent = SCOPE_HINT[m];
+}
+function fill(p) {
+  $("#interests").value = (p.interests || []).join(", ");
+  $("#fields").value = (p.field_interests || []).join(", ");
+  $("#budget").value = p.tuition_budget_gbp ?? "";
+  $("#intake").value = p.target_intake ?? "";
+  $("#ieltsO").value = p.ielts?.overall ?? "";
+  $("#ieltsC").value = p.ielts?.min_component ?? "";
+  $("#topn").value = p.top_n ?? 3;
+  const s = p.scope || {};
+  const mode = s.program_ids?.length || s.school ? "D" : s.city ? "C" : s.country ? "B" : "A";
+  $(`input[name=scope][value=${mode}]`).checked = true;
+  if (s.city) $("#city").value = s.city;
+  $$("#progs input").forEach(cb => cb.checked = (s.program_ids || []).includes(cb.value));
+  const w = { ...DEFAULT_W, ...(p.weights || {}) };
+  for (const k in w) { $("#w_" + k).value = w[k]; $("#o_" + k).textContent = (+w[k]).toFixed(2); }
+  syncScope();
+}
+function readForm() {
+  const mode = $("input[name=scope]:checked").value;
+  const scope = mode === "A" ? {} : { country: "UK" };
+  if (mode === "C") scope.city = $("#city").value;
+  if (mode === "D") scope.program_ids = $$("#progs input:checked").map(c => c.value);
+  const num = id => $(id).value === "" ? undefined : +$(id).value;
+  const p = {
+    interests: list($("#interests").value), field_interests: list($("#fields").value),
+    tuition_budget_gbp: num("#budget"), target_intake: num("#intake"),
+    ielts: { overall: num("#ieltsO"), min_component: num("#ieltsC") },
+    scope, top_n: num("#topn") || 3,
+    weights: Object.fromEntries(Object.keys(DEFAULT_W).map(k => [k, +$("#w_" + k).value])),
+  };
+  if ($("#today").value) p.today = $("#today").value;
+  return p;
+}
+
+// ---------------------------------------------------------------------------------------------------
+// tabs
+// ---------------------------------------------------------------------------------------------------
+function showTab(name) {
+  TAB = name;
+  $$("#tabbar [data-tab]").forEach(b => b.classList.toggle("on", b.dataset.tab === name));
+  $$(".pane").forEach(p => p.hidden = p.id !== "pane-" + name);
+  try { sessionStorage.setItem("tc.tab", name); } catch { /* fine */ }
+}
+
+// ---------------------------------------------------------------------------------------------------
+// Overview
+// ---------------------------------------------------------------------------------------------------
+function unisPanel(res, title) {
+  const us = res.universities || [];
+  if (!us.length) return "";
+  return `<div class="panel"><h2>${esc(title)} <span class="info" data-tip="Every university in these cities. Fees, deadlines and IELTS are only shown for programmes we've checked on the official course page.">i</span></h2>
+    <div class="unis">${us.map(u => `<a class="uni" href="${esc(u.url)}" target="_blank" rel="noopener">
+      <b>${esc(u.name)}</b><span class="meta">${esc(u.city)}</span>
+      ${u.verified_programmes ? `<span class="chip">${u.verified_programmes} verified</span>` : `<span class="chip plain">official site ↗</span>`}</a>`).join("")}</div></div>`;
+}
+function renderOverview(res) {
+  const pick = res.top[0];
+  if (!pick) {
+    const where = res.mode === "C" ? cityName(readForm().scope.city) : "this scope";
+    return `<div class="panel empty" style="padding:30px 20px">No programmes we've verified in ${esc(where)} yet - the universities there are listed below with their official sites.</div>`
+      + unisPanel(res, `Universities in ${where}`);
+  }
+  const pid = pick.program.id, dl = res.deadlines[pid] || {}, fee = pick.program.fee_overseas_gbp, budget = readForm().tuition_budget_gbp;
+  const taste = res.city_ranking.findIndex(t => t.city_id === pick.city.id);
+  const kpiDeadline = !dl.date ? ["n/a", "not on the official page"] : dl.passed ? ["passed", dl.date + " · earlier cycle"]
+    : [`${days(res.today, dl.date)} days`, `${dl.date} · ${dl.label}`];
+  const kpiFee = fee == null ? ["n/a", "fee not on the official page"] : !budget ? [money(fee), "no budget set"]
+    : fee <= budget ? [`£${(budget - fee).toLocaleString("en-GB")}`, `under budget · fee ${money(fee)}`] : [`+£${(fee - budget).toLocaleString("en-GB")}`, `over budget · fee ${money(fee)}`];
+  const kpiTaste = taste < 0 ? ["n/a", "no interests entered"] : [`#${taste + 1} of ${res.city_ranking.length}`, `${pick.city.name} for your taste${res.client === "mock" ? " (mock)" : ""}`];
+
+  let h = `<div class="panel"><div class="hero">${ring(pick.fit, 116)}
+    <div style="flex:1;min-width:0"><div class="eyebrow">${res.mode === "D" ? "Best of your picks" : "Your best match"}</div>
+      <h2>${esc(pick.program.name)}</h2><div class="meta">${esc(pick.program.school)} · ${esc(pick.city.name)}</div>
+      <div class="kpis" style="margin-top:12px">
+        <div class="kpi"><div class="k">Next deadline</div><div class="v">${kpiDeadline[0]}</div><div class="s">${esc(kpiDeadline[1])}</div></div>
+        <div class="kpi"><div class="k">Fee vs budget</div><div class="v">${kpiFee[0]}</div><div class="s">${kpiFee[1]}</div></div>
+        <div class="kpi"><div class="k">City taste</div><div class="v">${kpiTaste[0]}</div><div class="s">${esc(kpiTaste[1])}</div></div>
+      </div></div></div></div>`;
+
+  h += `<div class="grid3">${res.top.slice(0, 3).map((f, i) => `<div class="panel topcard" data-goto="programmes" data-tip="Open in Programmes">
+      <div class="head">${ring(f.fit, 56)}<div style="min-width:0"><div class="meta">#${i + 1}</div><h3>${esc(f.program.name)}</h3>
+        <div class="meta">${esc(f.program.school)} · ${esc(f.city.name)}</div></div></div>
+      ${mini4(f)}
+      <div class="chips">${feeChip(f.program)}${deadlineChip(f.program.id)}</div></div>`).join("")}</div>`;
+
+  h += `<div class="grid2">`;
+  if (res.dna) h += `<div class="panel"><h2>Your taste <span class="info" data-tip="Built from the tags of your interests${res.client === "mock" ? " (mock tags)" : ""}">i</span></h2>
+      <div class="archetype">${esc(res.dna.archetype)}</div>
+      <div class="chips" style="margin-top:10px">${res.dna.traits.slice(0, 6).map(t => `<span class="chip">${esc(t.tag)} ${Math.round(t.weight * 100)}%</span>`).join("")}</div>
+      <div class="chips" style="margin-top:10px">${res.interests.map(i => `<span class="chip plain" data-tip="${esc(i.name)}">${esc(i.input)}</span>`).join("")}</div></div>`;
+  if (res.city_ranking.length) h += `<div class="panel"><div class="toolbar" style="margin-bottom:10px"><h2 style="margin:0">Cities for your taste</h2>
+      <button type="button" class="small" data-goto="cities">Explore →</button></div>
+      <div class="hbars">${res.city_ranking.slice(0, 8).map(t => `<div class="hbar" data-tip="${esc(cityName(t.city_id))}: ${t.score.toFixed(2)}"><span>${esc(cityName(t.city_id))}</span>${bar(t.score)}<span class="num" style="text-align:right">${Math.round(t.score * 100)}</span></div>`).join("")}</div></div>`;
+  h += `</div>`;
+  return h + agentSteps(res);
+}
+// what the agent did on this run, in plain steps (the raw trace stays in the Plan tab)
+function agentSteps(res) {
+  const ents = res.interests.filter(i => i.kind !== "tag").length, tags = res.interests.length - ents;
+  const topCity = res.city_ranking[0] ? cityName(res.city_ranking[0].city_id) : null;
+  const verifiedTop = res.top.filter(f => f.unknown.length === 0).length;
+  const unknownFields = res.top.reduce((n, f) => n + f.unknown.length, 0);
+  const hardNote = { A: "nothing fixed - every city and programme is open", B: "UK fixed as a hard constraint",
+    C: `${cityName(readForm().scope.city)} fixed - nothing outside it is ranked`, D: `only your ${res.top.length} chosen programme(s) are judged` }[res.mode];
+  const steps = [
+    ["Read your scope", hardNote],
+    ["Matched your tastes to Qloo", `${res.interests.length} interests → ${ents} ${ents === 1 ? "entity" : "entities"} + ${tags} ${tags === 1 ? "tag" : "tags"} in Qloo's taste graph`],
+    topCity ? ["Scored cities on one UK-wide Qloo heatmap", `${res.city_ranking.length} major student cities compared · best taste fit: ${topCity}`] : null,
+    ["Scored programmes", `${res.ranked.length} in scope · taste + academic + budget + language, with your weights`],
+    ["Checked the official data", `every fee, deadline and IELTS band comes from the course page${unknownFields ? ` · ${unknownFields} missing value(s) flagged, scored neutral - never guessed` : ""}`],
+    ["Planned your applications", `${Object.values(res.plans).filter(p => p.steps.length).length} timeline(s) worked back from the next open round`],
+    res.alternatives.length ? ["Looked beyond your picks", `${res.alternatives.length} programme(s) fit you better than your weakest pick - see Programmes`] : null,
+  ].filter(Boolean);
+  return `<div class="panel"><div class="toolbar" style="margin-bottom:6px"><h2 style="margin:0">What the agent did</h2>
+      <button type="button" class="small" data-goto="plan">Full trace →</button></div>
+    <ol class="steps">${steps.map(([t, d]) => `<li><b>${esc(t)}</b><span class="meta">${esc(d)}</span></li>`).join("")}</ol></div>`;
+}
+
+// ---------------------------------------------------------------------------------------------------
+// Cities: DNA, city bar chart -> places + a week
+// ---------------------------------------------------------------------------------------------------
+const WEEK = [["Mon", ["evening"]], ["Tue", ["evening"]], ["Wed", ["evening"]], ["Thu", ["evening"]], ["Fri", ["night"]],
+              ["Sat", ["morning", "afternoon"]], ["Sun", ["morning", "afternoon"]]];
+function renderCities(res) {
+  if (!res.city_ranking.length) return `<div class="panel empty">Add a few interests to see how each city fits your taste.</div>`;
+  if (!res.city_ranking.some(t => t.city_id === CITY_SEL)) CITY_SEL = res.top[0]?.city.id || res.city_ranking[0].city_id;
+  const t = res.city_ranking.find(x => x.city_id === CITY_SEL), names = res.names, mockTxt = res.client === "mock" ? " (mock)" : "";
+  let h = "";
+  if (res.dna) h += `<div class="panel"><div class="grid2">
+      <div><h2>Your Taste DNA</h2><div class="archetype" style="margin-bottom:10px">${esc(res.dna.archetype)}</div>
+        <div class="hbars">${res.dna.traits.slice(0, 5).map(x => `<div class="hbar" data-tip="from ${esc(x.from.join(", "))}"><span>${esc(x.tag)}</span>${bar(x.weight / res.dna.traits[0].weight)}<span class="num" style="text-align:right">${Math.round(x.weight * 100)}%</span></div>`).join("")}</div></div>
+      <div><h2>Built from</h2><div class="chips">${res.interests.map(i => `<span class="chip plain" data-tip="${esc(i.kind === "tag" ? "Qloo tag" : "Qloo entity")}: ${esc(i.name)}">${esc(i.input)}</span>`).join("")}</div>
+        <p class="meta" style="margin-top:10px">Each interest is matched to Qloo's taste graph; city scores come from one UK-wide Qloo heatmap.</p></div>
+    </div></div>`;
+
+  h += `<div class="grid2">
+    <div class="panel"><h2>Taste fit by city <span class="info" data-tip="One UK-wide Qloo heatmap for your interests, compared across the major student cities${mockTxt}. Click a city.">i</span></h2>
+      <div class="hbars">${res.city_ranking.filter((r, i) => i < 10 || r.city_id === CITY_SEL).map(r => `<button type="button" class="hbar ${r.city_id === CITY_SEL ? "on" : "dim"}" data-city="${esc(r.city_id)}"
+        data-tip="Driven by ${esc(Object.entries(r.driver_counts).sort((a, b) => b[1] - a[1]).slice(0, 2).map(([k]) => names[k] || k).join(" + ") || "-")}">
+        <span>${esc(cityName(r.city_id))}</span>${bar(r.score)}<span class="num" style="text-align:right">${Math.round(r.score * 100)}</span></button>`).join("")}</div></div>
+    <div class="panel"><h2>You'd like in ${esc(cityName(CITY_SEL))}${mockTxt}</h2>
+      ${t.evidence?.length ? `<ol class="places">${t.evidence.slice(0, 6).map(e => `<li><b>${esc(e.name)}</b>${bar(e.affinity ?? 0)}
+        ${e.drivers?.length ? `<span class="why">for your ${e.drivers.map(d => esc(names[d] || d)).join(" + ")}</span>` : ""}</li>`).join("")}</ol>`
+        : '<p class="meta">No places returned for this city.</p>'}</div></div>`;
+
+  // a week: best places go to the weekend, the rest to weekday evenings; no place twice
+  const places = [...(t.evidence || [])].sort((a, b) => (b.affinity ?? 0) - (a.affinity ?? 0));
+  const slots = {};
+  let i = 0;
+  for (const d of [5, 6, 4, 0, 1, 2, 3]) for (const w of WEEK[d][1]) if (i < places.length) slots[`${d}|${w}`] = places[i++];
+  h += `<div class="panel"><h2>A week in ${esc(cityName(CITY_SEL))} <span class="info" data-tip="Your first week, planned from the places matched to your taste${mockTxt}">i</span></h2>
+    <div class="week">${WEEK.map(([day, whens], d) => `<div class="day ${d >= 5 ? "weekend" : ""}"><h4>${day}</h4>${whens.map(w => {
+      const p = slots[`${d}|${w}`];
+      return `<div class="slot"><span class="when">${w}</span>${p ? `<b data-tip="${esc(p.drivers?.length ? "for your " + p.drivers.map(x => names[x] || x).join(" + ") : "")}">${esc(p.name)}</b>` : '<span class="meta">explore</span>'}</div>`;
+    }).join("")}</div>`).join("")}</div></div>`;
+  return h;
+}
+
+// ---------------------------------------------------------------------------------------------------
+// Programmes: cards + comparison table
+// ---------------------------------------------------------------------------------------------------
+function progCard(f, res, n) {
+  const p = f.program, d = RANK_DELTA[p.id];
+  const delta = d ? `<span class="delta ${d > 0 ? "up" : "down"}">${d > 0 ? "▲" : "▼"}${Math.abs(d)}</span>` : "";
+  return `<article class="panel prog">
+    <div class="head">${ring(f.fit, 64)}<div style="min-width:0"><div class="rk">#${n}${delta}${p.duration ? " · " + esc(p.duration) : ""}</div>
+      <h3>${esc(p.name)}</h3><div class="meta">${esc(p.school)} · ${esc(f.city.name)}</div></div></div>
+    ${mini4(f)}
+    <div class="chips">${feeChip(p)}
+      <span class="chip plain" data-tip="English requirement">🗣 ${ielts(p)}</span>${deadlineChip(p.id)}</div>
+    ${f.notes.length ? `<div class="note why">${f.notes.map(esc).join(" · ")}</div>` : ""}
+    <details><summary>Details</summary>
+      ${f.unknown.length ? `<div class="note warn" style="margin-top:8px">Missing official data (scored neutral): ${f.unknown.map(esc).join("; ")}</div>` : ""}
+      <dl class="facts">
+        <dt>Entry</dt><dd>${p.entry_requirement ? esc(p.entry_requirement) : '<span class="unv">not on official page</span>'}</dd>
+        ${p.modules?.length ? `<dt>Modules</dt><dd>${p.modules.slice(0, 6).map(esc).join(", ")}</dd>` : ""}
+        <dt>Source</dt><dd><a href="${esc(p.source_url)}" target="_blank" rel="noopener">Official page</a> <span class="meta">checked ${esc(p.checked_on || "not yet")}</span></dd>
+      </dl></details>
+  </article>`;
+}
+
+const SORTS = {
+  fit: f => f.fit, taste: f => f.components.taste, academic: f => f.components.academic,
+  budget: f => f.components.budget, language: f => f.components.language,
+  fee: f => f.program.fee_overseas_gbp, ielts: f => f.program.english?.ielts_overall,
+  deadline: f => LAST.deadlines[f.program.id]?.date, name: f => f.program.name,
+};
+const tableRows = res => [...res.ranked.map(f => ({ ...f, out: false })), ...res.alternatives.map(f => ({ ...f, out: true }))];
+
+function renderProgrammes(res) {
+  let h = `<div class="grid2">${res.top.map((f, i) => progCard(f, res, i + 1)).join("") || '<div class="panel empty">No programmes match this scope.</div>'}</div>`;
+  if (res.alternatives.length) h += `<div class="panel"><h2>Worth a look <span class="info" data-tip="Outside your chosen scope, but a better fit than your weakest pick">i</span></h2>
+    <div class="hbars">${res.alternatives.map(f => `<div class="hbar" style="grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) 42px"><span><b>${esc(f.program.name)}</b> <span class="meta">${esc(f.city.name)}</span></span>${bar(f.fit)}<span class="num" style="text-align:right">${Math.round(f.fit * 100)}</span></div>`).join("")}</div></div>`;
+  h += unisPanel(res, res.mode === "C" ? `All universities in ${cityName(readForm().scope.city)}` : "Universities in your top cities");
+  return h + `<div class="panel" id="cmpPanel"></div>`;
+}
+
+function renderTable() {
+  const res = LAST, get = SORTS[SORT.key], box = $("#cmpPanel");
+  if (!box) return;
+  const rows = tableRows(res).sort((a, b) => {
+    const x = get(a), y = get(b);
+    if (x == null && y == null) return 0;
+    if (x == null) return 1;            // missing data always last
+    if (y == null) return -1;
+    return (x < y ? -1 : x > y ? 1 : 0) * SORT.dir;
+  });
+  const th = (key, label, num) => `<th data-sort="${key}" class="${SORT.key === key ? "on" : ""}" ${num ? 'style="text-align:right"' : ""}>${label}${SORT.key === key ? (SORT.dir < 0 ? " ↓" : " ↑") : ""}</th>`;
+  const comp = (f, k) => `<td class="n"><span class="mini">${bar(f.components[k], isUnk(f, k))}</span>${isUnk(f, k) ? '<span class="unv">?</span>' : Math.round(f.components[k] * 100)}</td>`;
+  const body = rows.map(f => {
+    const p = f.program, dl = res.deadlines[p.id] || {}, d = RANK_DELTA[p.id];
+    const delta = d ? `<span class="delta ${d > 0 ? "up" : "down"}">${d > 0 ? "▲" : "▼"}${Math.abs(d)}</span>` : "";
+    const rank = f.out ? '<span class="meta">out</span>' : res.ranked.findIndex(r => r.program.id === p.id) + 1;
+    return `<tr class="${f.out ? "out" : ""}">
+      <td><input type="checkbox" data-cmp="${esc(p.id)}" ${COMPARE.has(p.id) ? "checked" : ""} aria-label="Add to comparison"></td>
+      <td class="n">${rank}${delta}</td>
+      <td><b>${esc(p.name)}</b><div class="meta">${esc(p.school)} · ${esc(f.city.name)}</div></td>
+      <td class="n"><b>${Math.round(f.fit * 100)}</b></td>
+      ${Object.keys(COMP).map(k => comp(f, k)).join("")}
+      <td class="n">${money(p.fee_overseas_gbp)}</td>
+      <td class="n">${p.english?.ielts_overall ?? '<span class="unv">?</span>'}</td>
+      <td class="n">${dl.date ? `<span ${dl.passed ? 'class="unv" data-tip="Passed - earlier cycle"' : ""}>${esc(dl.date)}</span>` : '<span class="unv">n/a</span>'}</td>
+    </tr>`;
+  }).join("");
+  box.innerHTML = `<h2>Compare all <span class="info" data-tip="Click a column to sort. Tick up to ${MAX_COMPARE} to compare side by side. ▲▼ = rank change since the last run.">i</span></h2>
+    <div class="tablewrap"><table class="cmp"><thead><tr>
+      <th></th><th style="text-align:right">#</th>${th("name", "Programme")}${th("fit", "Fit", 1)}
+      ${th("taste", "Taste", 1)}${th("academic", "Academic", 1)}${th("budget", "Budget", 1)}${th("language", "Language", 1)}
+      ${th("fee", "Fee", 1)}${th("ielts", "IELTS", 1)}${th("deadline", "Deadline", 1)}
+    </tr></thead><tbody>${body}</tbody></table></div>
+    <div class="compare" id="compare"></div>`;
+  $$("th[data-sort]", box).forEach(h => h.onclick = () => {
+    const k = h.dataset.sort;
+    SORT = { key: k, dir: SORT.key === k ? -SORT.dir : (["name", "deadline", "fee", "ielts"].includes(k) ? 1 : -1) };
+    renderTable();
+  });
+  $$("[data-cmp]", box).forEach(cb => cb.onchange = () => {
+    if (cb.checked && COMPARE.size >= MAX_COMPARE) { cb.checked = false; return; }
+    cb.checked ? COMPARE.add(cb.dataset.cmp) : COMPARE.delete(cb.dataset.cmp);
+    renderCompare();
+  });
+  renderCompare();
+}
+function renderCompare() {
+  const all = tableRows(LAST);
+  const picked = [...COMPARE].map(id => all.find(f => f.program.id === id)).filter(Boolean);
+  const box = $("#compare");
+  if (picked.length < 2) { box.innerHTML = picked.length ? '<p class="meta">Tick one more to compare side by side.</p>' : ""; return; }
+  const best = k => Math.max(...picked.map(f => k === "fit" ? f.fit : f.components[k]));
+  box.style.gridTemplateColumns = innerWidth <= 560 ? "1fr" : `repeat(${picked.length}, minmax(0, 1fr))`;
+  box.innerHTML = picked.map(f => {
+    const p = f.program;
+    const line = (k, label) => { const v = k === "fit" ? f.fit : f.components[k];
+      return `<div><div class="meta" style="display:flex;justify-content:space-between"><span>${label}</span><b>${Math.round(v * 100)}${v === best(k) ? " ★" : ""}</b></div>${bar(v, k !== "fit" && isUnk(f, k))}</div>`; };
+    return `<div class="col"><h3>${esc(p.name)}</h3><div class="meta">${esc(p.school)} · ${esc(f.city.name)}</div>
+      <div style="display:grid;gap:6px;margin:10px 0">${line("fit", "Fit")}${Object.keys(COMP).map(k => line(k, COMP[k])).join("")}</div>
+      <div class="chips">${feeChip(p)}<span class="chip plain">${ielts(p)}</span>${deadlineChip(p.id)}</div></div>`;
+  }).join("");
+}
+
+// ---------------------------------------------------------------------------------------------------
+// Panel: programme x advisor verdict matrix -> details
+// ---------------------------------------------------------------------------------------------------
+let PANEL_VOICES = null, PANEL_KEY = null;          // AI-voiced text for the panel built from PANEL_KEY's profile
+function renderPanel(res) {
+  const pn = res.panel;
+  if (!pn?.programmes.length) return `<div class="panel empty">No programmes for the panel to judge.</div>`;
+  if (!pn.programmes.some(p => p.program_id === PANEL_SEL)) { PANEL_SEL = pn.programmes[0].program_id; PANEL_ADV = null; }
+  const voiced = PANEL_KEY === JSON.stringify(readForm()) ? PANEL_VOICES : null;
+  const canVoice = META.narrator.available;
+  let h = `<div class="panel"><div class="toolbar" style="margin-bottom:10px"><h2 style="margin:0">The advisory panel
+      <span class="info" data-tip="Four specialists judge each programme from the data and rules; no LLM decides anything. Click a cell for their reasons.">i</span></h2>
+    ${canVoice ? `<button type="button" class="small" id="narrate">${voiced ? "Voiced by AI ✓" : "🎙 Let them speak (AI)"}</button>` : ""}</div>
+    ${pn.pick ? `<div class="chips" style="margin-bottom:10px"><span class="chip">🏁 Panel's pick: ${esc(pn.pick.programme)}</span></div>` : ""}
+    <div class="tablewrap"><table class="matrix"><thead><tr><th class="rowh">Programme</th>
+      ${pn.advisors.map(a => `<th data-tip="${esc(a.focus)}">${a.icon}<br>${esc(a.name.split(" ")[0])}</th>`).join("")}<th>Chair</th></tr></thead><tbody>
+    ${pn.programmes.map(p => `<tr><td><button type="button" class="rowbtn ${p.program_id === PANEL_SEL ? "sel" : ""}" data-pp="${esc(p.program_id)}">
+        <b>${esc(p.programme)}</b><div class="meta">${esc(p.city)}</div></button></td>
+      ${pn.advisors.map(a => { const o = p.opinions[a.id];
+        return `<td><button type="button" class="cell ${o.verdict} ${p.program_id === PANEL_SEL && PANEL_ADV === a.id ? "sel" : ""}" data-pp="${esc(p.program_id)}" data-pa="${a.id}"
+          data-tip="${esc(a.name)}: ${esc(o.points[0] || "")}"><span class="ic">${VERDICT_ICON[o.verdict]}</span>${o.verdict}</button></td>`; }).join("")}
+      <td class="chairh">${esc(p.chair.headline)}</td></tr>`).join("")}
+    </tbody></table></div>
+    <div class="legend" style="margin-top:8px">${Object.entries(VERDICT_ICON).map(([v, ic]) => `<span><span class="cell ${v}" style="display:inline-flex;padding:2px 8px"><span class="ic">${ic}</span>${v}</span></span>`).join("")}</div></div>`;
+
+  const p = pn.programmes.find(x => x.program_id === PANEL_SEL), v = voiced?.[p.program_id] || {};
+  h += `<div class="panel"><h2>${esc(p.programme)} <span class="meta">${esc(p.school)} · ${esc(p.city)}</span></h2>
+    <div class="advisors">${pn.advisors.map(a => { const o = p.opinions[a.id];
+      const fav = pn.pick?.favourites?.[a.id] === p.programme && pn.programmes.length > 1 ? ` <span data-tip="This advisor's favourite">★</span>` : "";
+      return `<div class="adv ${PANEL_ADV === a.id ? "focus" : ""}"><div class="who"><span>${a.icon} ${esc(a.name)}${fav}</span><span class="verdict ${o.verdict}">${VERDICT_ICON[o.verdict]} ${o.verdict}</span></div>
+        ${v[a.id] ? `<p class="voice">“${esc(v[a.id])}”</p>` : `<ul>${o.points.slice(0, 2).map(pt => `<li>${esc(pt)}</li>`).join("")}</ul>
+        ${o.points.length > 2 ? `<span class="meta" data-tip="${esc(o.points.slice(2).join(" · "))}">+${o.points.length - 2} more</span>` : ""}`}</div>`; }).join("")}</div>
+    <div class="chair" style="margin-top:10px">🪑 <b>${esc(p.chair.headline)}.</b> ${esc(v.chair || p.chair.summary)}</div>
+    </div>`;
+  return h;
+}
+async function voicePanel(btn) {
+  const profile = readForm();
+  btn.disabled = true; btn.textContent = "Advisors are talking…";
+  try {
+    const r = await fetch("/api/narrate", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(profile) });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.error || r.statusText);
+    if (data.narration_error) throw new Error(data.narration_error);
+    PANEL_VOICES = Object.fromEntries(data.programmes.map(p => [p.program_id, p.voices || {}]));
+    PANEL_KEY = JSON.stringify(profile);
+    LAST.panel = data;                               // same facts, now with voices
+    paint("panel");
+  } catch (err) {
+    btn.disabled = false; btn.textContent = "🎙 Let them speak (AI)";
+    btn.insertAdjacentHTML("afterend", `<span class="unv" style="font-size:12px">${esc(err.message)}</span>`);
+  }
+}
+
+// ---------------------------------------------------------------------------------------------------
+// Plan: gantt timeline + tracker + calendar export
+// ---------------------------------------------------------------------------------------------------
+const DONE = new Set((() => { try { return JSON.parse(localStorage.getItem("tc.done") || "[]"); } catch { return []; } })());
+function saveDone() { try { localStorage.setItem("tc.done", JSON.stringify([...DONE])); } catch { /* private mode: ticks just aren't kept */ } }
+const checkItem = (key, label) => `<li><label><input type="checkbox" data-done="${esc(key)}" ${DONE.has(key) ? "checked" : ""}> ${esc(label)}</label></li>`;
+
+function renderPlan(res) {
+  const rows = res.top.map(f => ({ f, plan: res.plans[f.program.id] })).filter(r => r.plan);
+  const live = rows.filter(r => r.plan.steps.length);
+  let h = "";
+  if (live.length) {
+    const start = res.today, end = live.map(r => r.plan.deadline).sort().at(-1);
+    const span = Math.max(days(start, end), 30) * 1.04;
+    const x = d => (Math.max(0, days(start, d)) / span * 100).toFixed(2) + "%";
+    const ticks = [];
+    for (let d = new Date(start + "T00:00:00Z"); ; ) {
+      d.setUTCMonth(d.getUTCMonth() + 1, 1);
+      const iso = d.toISOString().slice(0, 10);
+      if (days(start, iso) > span) break;
+      ticks.push(iso);
+    }
+    const every = ticks.length > 9 ? 2 : 1;
+    const label = iso => new Date(iso + "T00:00:00Z").toLocaleString("en-GB", { month: "short", timeZone: "UTC" }) + (iso.slice(5, 7) === "01" ? " " + iso.slice(0, 4) : "");
+    h += `<div class="panel"><div class="toolbar" style="margin-bottom:12px"><h2 style="margin:0">Your application timeline</h2>
+        <button type="button" class="small" data-ics="all">📅 Export all (.ics)</button></div>
+      <div class="gantt"><div></div><div class="axis">${ticks.map((t, i) => i % every ? "" : `<span class="tick" style="left:${x(t)}">${label(t)}</span>`).join("")}</div>
+      ${live.map(({ f, plan }) => {
+        const pid = f.program.id, first = plan.steps[0].date;
+        return `<div class="lab"><b data-tip="${esc(f.program.name)}">${esc(f.program.name)}</b><span class="meta">${esc(f.city.name)}</span></div>
+          <div class="track">${ticks.map(t => `<span class="grid" style="left:${x(t)}"></span>`).join("")}
+            <span class="span" style="left:${x(first)};width:calc(${x(plan.deadline)} - ${x(first)})"></span>
+            <span class="today" data-tip="Today ${esc(res.today)}"></span>
+            ${plan.steps.map(s => { const k = `${pid}|${s.task}`, done = DONE.has(k);
+              return `<span class="mk ${done ? "done" : s.late ? "late" : ""}" style="left:${x(s.date)}" data-tip="${esc(s.date)} · ${esc(s.task)}${done ? " ✓" : s.late ? " (overdue)" : ""}"></span>`; }).join("")}
+            <span class="mk dl" style="left:${x(plan.deadline)}" data-tip="Deadline ${esc(plan.deadline)} · ${esc(plan.label)}"></span></div>`;
+      }).join("")}</div>
+      <div class="legend" style="margin-top:12px"><span><span class="mk"></span>to do</span><span><span class="mk done"></span>done</span>
+        <span><span class="mk late"></span>overdue</span><span><span class="mk dl"></span>deadline</span><span><span class="todayk"></span>today</span></div></div>`;
+  }
+  const quiet = rows.filter(r => !r.plan.steps.length);
+  if (quiet.length) h += `<div class="panel"><h2>Check these deadlines</h2>${quiet.map(({ f, plan }) =>
+    `<div class="note warn" style="margin-bottom:6px" data-tip="${esc([plan.label, ...plan.warnings].join(" · "))}"><b>${esc(f.program.name)}</b> - ${
+      plan.deadline ? `only last cycle's date (${esc(plan.deadline)}); check the ${res.target_intake} page` : /^Rolling/.test(plan.label) ? esc(plan.label) : "no date on the official page yet"}</div>`).join("")}</div>`;
+
+  if (live.length) h += `<div class="grid2">${live.map(({ f, plan }) => {
+    const pid = f.program.id, keys = plan.steps.map(s => `${pid}|${s.task}`), n = keys.filter(k => DONE.has(k)).length;
+    return `<div class="panel"><div class="toolbar"><h3>${esc(f.program.name)}</h3><button type="button" class="small" data-ics="${esc(pid)}" data-tip="Add these dates to your calendar">📅 .ics</button></div>
+      <div class="meter" style="margin-top:8px"><span data-progress="${esc(pid)}">${n}/${keys.length}</span>${bar(n / keys.length)}</div>
+      ${plan.warnings.map(w => `<div class="note warn" style="margin-top:6px">${esc(w)}</div>`).join("")}
+      <ol class="steps">${plan.steps.map((s, i) => `<li class="${DONE.has(keys[i]) ? "done" : ""}"><label><input type="checkbox" data-done="${esc(keys[i])}" ${DONE.has(keys[i]) ? "checked" : ""}>
+        <time>${esc(s.date)}</time><span>${esc(s.task)}${s.late && !DONE.has(keys[i]) ? '<span class="late-tag">overdue</span>' : ""}</span></label></li>`).join("")}
+        <li><label><input type="checkbox" disabled><time>${esc(plan.deadline)}</time><span><b>Deadline</b> · ${esc(plan.label)}</span></label></li></ol></div>`;
+  }).join("")}</div>`;
+
+  const docKeys = [...res.checklist.map(x => `doc|${x}`), ...res.after_offer.map(x => `offer|${x}`)];
+  const nd = docKeys.filter(k => DONE.has(k)).length;
+  h += `<div class="panel"><div class="toolbar"><h2 style="margin:0">Documents <span class="info" data-tip="Typical UK taught master's - confirm on each course page. Ticks are saved in this browser.">i</span></h2></div>
+    <div class="meter" style="margin:8px 0 12px"><span id="docProgress">${nd}/${docKeys.length}</span>${bar(nd / docKeys.length)}</div>
+    <div class="grid2"><div><div class="meta" style="margin-bottom:6px">Before you apply</div><ul class="check">${res.checklist.map(x => checkItem(`doc|${x}`, x)).join("")}</ul></div>
+      <div><div class="meta" style="margin-bottom:6px">After an offer</div><ul class="check">${res.after_offer.map(x => checkItem(`offer|${x}`, x)).join("")}</ul></div></div></div>`;
+  h += `<div class="panel"><details class="trace"><summary>Agent trace</summary><ol>${res.trace.map(t => `<li>${esc(t)}</li>`).join("")}</ol></details></div>`;
+  return h;
+}
+function toggleDone(cb) {
+  cb.checked ? DONE.add(cb.dataset.done) : DONE.delete(cb.dataset.done);
+  saveDone();
+  paint("plan");                                      // redraw markers, meters and strike-through together
+}
+function icsFor(pids) {
+  const ymd = d => d.replaceAll("-", "");
+  const next = d => { const x = new Date(d + "T00:00:00Z"); x.setUTCDate(x.getUTCDate() + 1); return x.toISOString().slice(0, 10); };
+  const txt = s => s.replace(/[\\;,]/g, m => "\\" + m).replace(/\n/g, "\\n");
+  const stamp = new Date().toISOString().replace(/[-:]/g, "").slice(0, 15) + "Z";
+  const ev = [];
+  for (const pid of pids) {
+    const f = LAST.top.find(x => x.program.id === pid), plan = LAST.plans[pid];
+    if (!f || !plan?.deadline) continue;
+    const items = [...plan.steps.map(s => ({ date: s.date, title: s.task })), { date: plan.deadline, title: `DEADLINE (${plan.label})` }];
+    items.forEach((it, i) => ev.push(["BEGIN:VEVENT", `UID:tastecompass-${pid}-${i}@local`, `DTSTAMP:${stamp}`,
+      `DTSTART;VALUE=DATE:${ymd(it.date)}`, `DTEND;VALUE=DATE:${ymd(next(it.date))}`,
+      `SUMMARY:${txt(`${it.title} - ${f.program.name}`)}`,
+      `DESCRIPTION:${txt(`${f.program.school}, ${f.city.name}. Source: ${f.program.source_url}`)}`, "END:VEVENT"].join("\r\n")));
+  }
+  return ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//TasteCompass//EN", "CALSCALE:GREGORIAN", ...ev, "END:VCALENDAR"].join("\r\n");
+}
+function download(name, text, type) {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([text], { type }));
+  a.download = name; a.click();
+}
+
+// ---------------------------------------------------------------------------------------------------
+// Ask: AI explanations (Claude or OpenAI), one persistent node
+// ---------------------------------------------------------------------------------------------------
+let CHAT = null, CONV = null, CHAT_PROFILE = null, CHAT_BUSY = false;
+const QUICK = ["Explain these results: what separates the top picks, and what should I watch out for?", "What if my budget were £3,000 higher?", "What if I retake IELTS and get 7.5?", "What if I don't care about city taste?"];
+function chatPanel() {
+  if (CHAT) return CHAT;
+  CHAT = document.createElement("div");
+  CHAT.className = "panel"; CHAT.id = "chat";
+  if (!META.llm.available) {
+    CHAT.innerHTML = `<h2>Ask TasteCompass</h2><p class="meta">AI explanations are off: ${esc(META.llm.detail)}. Everything else works without it.</p>`;
+    return CHAT;
+  }
+  CHAT.innerHTML = `<h2>Ask TasteCompass <span class="info" data-tip="${esc(META.llm.detail)} explains; every number comes from the data, and what-ifs rerun the real scoring">i</span></h2>
+    <div class="btns qchips">${QUICK.map((q, i) => `<button type="button" data-q="${i}">${esc(i ? q : "Explain these results")}</button>`).join("")}</div>
+    <div class="log"></div>
+    <form class="ask"><input type="text" placeholder="e.g. Can I still make the Edinburgh deadline?" maxlength="500"><button type="submit">Ask</button></form>`;
+  $$("[data-q]", CHAT).forEach(b => b.onclick = () => ask(QUICK[+b.dataset.q]));
+  $(".ask", CHAT).onsubmit = e => { e.preventDefault(); const i = $("input", e.target); if (i.value.trim()) { ask(i.value.trim()); i.value = ""; } };
+  return CHAT;
+}
+function chatResultChanged(profile) {            // a changed form means the next question starts a fresh conversation
+  if (!CONV || JSON.stringify(profile) === JSON.stringify(CHAT_PROFILE)) return;
+  CONV = null;
+  const log = $(".log", CHAT);
+  if (log && log.children.length) log.insertAdjacentHTML("beforeend", `<div class="divider">— Profile changed: new questions use the updated results —</div>`);
+}
+function mdInline(t) {                          // t is already escaped
+  return t.replace(/`([^`]+)`/g, "<code>$1</code>")
+    .replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/__(.+?)__/g, "<b>$1</b>")
+    .replace(/(^|[^*\w])\*([^*\n]+)\*(?!\w)/g, "$1<i>$2</i>")
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+}
+function md(s) {                               // escape-first markdown for chat: headings, lists, tables, code, links
+  const out = [], lines = esc(s).replace(/\r/g, "").split("\n");
+  let i = 0;
+  const isUl = l => /^\s*[-*•] /.test(l), isOl = l => /^\s*\d+[.)] /.test(l), isRow = l => /^\s*\|.*\|\s*$/.test(l);
+  while (i < lines.length) {
+    const l = lines[i];
+    if (!l.trim() || /^\s*(-{3,}|\*{3,}|_{3,})\s*$/.test(l)) { i++; continue; }
+    if (/^\s*#{1,6} /.test(l)) { out.push(`<div class="mh">${mdInline(l.replace(/^\s*#{1,6} /, ""))}</div>`); i++; continue; }
+    if (isUl(l) || isOl(l)) {
+      const ordered = isOl(l), items = [];
+      while (i < lines.length && (ordered ? isOl(lines[i]) : isUl(lines[i]))) items.push(lines[i++].replace(/^\s*([-*•]|\d+[.)]) /, ""));
+      out.push(`<${ordered ? "ol" : "ul"}>${items.map(x => `<li>${mdInline(x)}</li>`).join("")}</${ordered ? "ol" : "ul"}>`); continue;
+    }
+    if (isRow(l)) {
+      const rows = [];
+      while (i < lines.length && isRow(lines[i])) rows.push(lines[i++]);
+      const cells = r => r.trim().replace(/^\||\|$/g, "").split("|").map(c => mdInline(c.trim()));
+      const body = rows.filter(r => !/^\s*\|[\s:|-]+\|\s*$/.test(r));
+      out.push(`<table><thead><tr>${cells(body[0]).map(c => `<th>${c}</th>`).join("")}</tr></thead><tbody>${
+        body.slice(1).map(r => `<tr>${cells(r).map(c => `<td>${c}</td>`).join("")}</tr>`).join("")}</tbody></table>`); continue;
+    }
+    const para = [];
+    while (i < lines.length && lines[i].trim() && !isUl(lines[i]) && !isOl(lines[i]) && !isRow(lines[i]) && !/^\s*#{1,6} /.test(lines[i])) para.push(lines[i++]);
+    out.push(`<p>${mdInline(para.join("<br>"))}</p>`);
+  }
+  return out.join("");
+}
+async function ask(question) {
+  if (CHAT_BUSY || !LAST) return;
+  CHAT_BUSY = true;
+  const log = $(".log", CHAT), profile = readForm();
+  log.insertAdjacentHTML("beforeend", `<div class="msg user">${esc(question)}</div>`);
+  const bot = document.createElement("div");
+  bot.className = "msg bot"; bot.innerHTML = '<span class="meta">Thinking…</span>';
+  log.append(bot); log.scrollTop = log.scrollHeight;
+  let text = "", tools = "";
+  const draw = () => { bot.innerHTML = tools + md(text); log.scrollTop = log.scrollHeight; };
+  try {
+    const r = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ conv_id: CONV, profile, question }) });
+    if (!r.ok) throw new Error((await r.json()).error || r.statusText);
+    const reader = r.body.getReader(), dec = new TextDecoder();
+    let buf = "";
+    for (;;) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      buf += dec.decode(value, { stream: true });
+      let i;
+      while ((i = buf.indexOf("\n\n")) >= 0) {
+        const raw = buf.slice(0, i); buf = buf.slice(i + 2);
+        const ev = /^event: (.*)$/m.exec(raw)?.[1], data = JSON.parse(/^data: (.*)$/m.exec(raw)?.[1] ?? "null");
+        if (ev === "conv") { CONV = data; CHAT_PROFILE = profile; }
+        else if (ev === "text") { text += data; draw(); }
+        else if (ev === "reset") { text = ""; draw(); }
+        else if (ev === "tool") {
+          const desc = Object.entries(data).map(([k, v]) => `${k}=${typeof v === "object" ? JSON.stringify(v) : v}`).join(", ");
+          tools += `<div class="tool">↻ Rerunning the scoring with ${esc(desc)}</div>`; draw();
+        }
+        else if (ev === "error") throw new Error(data);
+      }
+    }
+    if (!text) draw();
+  } catch (err) {
+    bot.className = "msg bot err"; bot.innerHTML = tools + md(text) + `<p>${esc(err.message)}</p>`;
+  } finally { CHAT_BUSY = false; }
+}
+
+// ---------------------------------------------------------------------------------------------------
+// render
+// ---------------------------------------------------------------------------------------------------
+const PAINTERS = { overview: renderOverview, cities: renderCities, programmes: renderProgrammes, panel: renderPanel, plan: renderPlan };
+function paint(name) {
+  $("#pane-" + name).innerHTML = PAINTERS[name](LAST);
+  if (name === "programmes") renderTable();
+}
+function render(res) {
+  $("#banner").innerHTML = res.client === "mock"
+    ? `<div class="banner"><b>Mock mode</b> · taste scores and places are placeholders until the Qloo key is set</div>` : "";
+  $("#tagline").textContent = `${MODE_TEXT[res.mode]} · intake ${res.target_intake}`;
+  $("#cnt-programmes").textContent = res.top.length;
+  for (const name in PAINTERS) paint(name);
+  const ask = $("#pane-ask");
+  if (!ask.contains(chatPanel())) ask.append(chatPanel());
+}
+
+let runSeq = 0;
+async function run(auto) {
+  const p = readForm();
+  if (p.scope.program_ids && !p.scope.program_ids.length) {
+    if (!auto) $("#pane-overview").innerHTML = `<div class="error">Mode D: tick at least one programme.</div>`;
+    return;
+  }
+  const seq = ++runSeq, btn = $("#go"), live = $("#live");
+  btn.disabled = !auto; if (!auto) btn.textContent = "Scoring…";
+  live.textContent = "Updating…"; live.classList.add("busy");
+  try {
+    const r = await fetch("/api/run", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(p) });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.error || r.statusText);
+    if (seq !== runSeq) return;            // a newer run started while this one was in flight
+    const rank = Object.fromEntries(data.ranked.map((f, i) => [f.program.id, i + 1]));
+    RANK_DELTA = LAST ? Object.fromEntries(Object.entries(rank).filter(([id]) => PREV_RANK[id]).map(([id, n]) => [id, PREV_RANK[id] - n])) : {};
+    PREV_RANK = rank;
+    LAST = data; render(data); chatResultChanged(p);
+    live.textContent = `Updated ${new Date().toLocaleTimeString("en-GB")}`;
+    if (!auto && innerWidth <= 900) $("#results").scrollIntoView({ behavior: "smooth" });
+  } catch (err) {
+    if (seq === runSeq) $("#pane-" + TAB).innerHTML = `<div class="error">Something went wrong: ${esc(err.message)}</div>`;
+  } finally {
+    live.classList.remove("busy");
+    btn.disabled = false; btn.textContent = "Find my programmes";
+  }
+}
+
+// ---- share link: the whole profile lives in the URL fragment (never sent to the server) ----
+const encodeProfile = p => btoa(unescape(encodeURIComponent(JSON.stringify(p)))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+const decodeProfile = s => JSON.parse(decodeURIComponent(escape(atob(s.replace(/-/g, "+").replace(/_/g, "/")))));
+async function shareLink(btn) {
+  const p = readForm(); delete p.today;
+  const url = `${location.origin}${location.pathname}#p=${encodeProfile(p)}`;
+  history.replaceState(null, "", url);
+  const old = btn.textContent;
+  try { await navigator.clipboard.writeText(url); btn.textContent = "Copied ✓"; }
+  catch { btn.textContent = "In address bar"; }
+  setTimeout(() => btn.textContent = old, 2200);
+}
+
+// ---- tooltip: any element with data-tip ----
+function tipEvents() {
+  const tip = $("#tip");
+  document.addEventListener("mouseover", e => {
+    const el = e.target.closest("[data-tip]");
+    if (!el || !el.dataset.tip) { tip.classList.remove("show"); return; }
+    tip.textContent = el.dataset.tip; tip.classList.add("show");
+  });
+  document.addEventListener("mousemove", e => {
+    if (!tip.classList.contains("show")) return;
+    const w = tip.offsetWidth, x = Math.min(e.clientX + 14, innerWidth - w - 8);
+    tip.style.left = x + "px"; tip.style.top = (e.clientY + 16) + "px";
+  });
+  document.addEventListener("mouseout", e => { if (!e.relatedTarget?.closest?.("[data-tip]")) tip.classList.remove("show"); });
+}
+
+async function init() {
+  buildWeights();
+  tipEvents();
+  META = await (await fetch("/api/meta")).json();
+  const badge = $("#clientBadge");
+  badge.textContent = META.client === "live" ? "Live Qloo" : "Mock data";
+  badge.classList.toggle("mock", META.client !== "live");
+  $("#city").innerHTML = [...META.cities].sort((a, b) => a.name.localeCompare(b.name)).map(c => `<option value="${esc(c.id)}">${esc(c.name)}</option>`).join("");
+  $("#progs").innerHTML = META.programs.map(p => `<label><input type="checkbox" value="${esc(p.id)}"><span>${esc(p.name)}<br><span class="meta">${esc(p.school)}</span></span></label>`).join("");
+  $$("input[name=scope]").forEach(r => r.addEventListener("change", syncScope));
+  $$("[data-preset]").forEach(b => b.addEventListener("click", () => { fill(PRESETS[b.dataset.preset]); run(true); }));
+  fill(PRESETS.b);
+
+  $("#tabbar").addEventListener("click", e => {
+    const b = e.target.closest("button");
+    if (!b) return;
+    if (b.dataset.tab) showTab(b.dataset.tab);
+    else if (b.id === "toggleSide") document.body.classList.toggle("nosidebar");
+    else if (b.id === "share") shareLink(b);
+    else if (b.id === "dl" && LAST) download(`tastecompass_mode_${LAST.mode.toLowerCase()}.md`, LAST.markdown, "text/markdown");
+  });
+  // panes are re-rendered often, so their controls are handled by delegation here
+  $("#results").addEventListener("change", e => { if (e.target.matches("[data-done]")) toggleDone(e.target); });
+  $("#results").addEventListener("click", e => {
+    const el = e.target.closest("[data-goto], [data-city], [data-pp], [data-ics], #narrate");
+    if (!el) return;
+    if (el.dataset.goto) showTab(el.dataset.goto);
+    else if (el.dataset.city) { CITY_SEL = el.dataset.city; paint("cities"); }
+    else if (el.dataset.pp) { PANEL_SEL = el.dataset.pp; PANEL_ADV = el.dataset.pa || null; paint("panel"); }
+    else if (el.dataset.ics) {
+      const ids = el.dataset.ics === "all" ? LAST.top.map(f => f.program.id) : [el.dataset.ics];
+      download(`tastecompass_${el.dataset.ics}.ics`, icsFor(ids), "text/calendar");
+    } else if (el.id === "narrate") voicePanel(el);
+  });
+
+  try { const t = sessionStorage.getItem("tc.tab"); if (t && PAINTERS[t] || t === "ask") showTab(t); } catch { /* fine */ }
+  // opened from a share link: load that profile; otherwise show the example straight away
+  const shared = /#p=([\w-]+)/.exec(location.hash);
+  if (shared) {
+    try { fill(decodeProfile(shared[1])); }
+    catch { $("#banner").innerHTML = `<div class="error">This share link is damaged - showing the example instead.</div>`; }
+  }
+  run(true);
+}
+
+$("#form").addEventListener("submit", e => { e.preventDefault(); run(false); });
+let debounce;
+const autoRun = e => {
+  if (!LAST) return;
+  // New interests mean new Qloo calls for every city, so wait until the field is left (its "change" event)
+  // instead of firing on each typing pause. Other fields reuse the client's cached Qloo responses.
+  if (e?.type === "input" && e.target.id === "interests") return;
+  clearTimeout(debounce); debounce = setTimeout(() => run(true), 350);
+};
+$("#form").addEventListener("input", autoRun);
+$("#form").addEventListener("change", autoRun);
+
+init();
+</script>
+</body>
+</html>

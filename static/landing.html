@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TasteCompass</title>
+<meta name="description" content="An agent that matches your taste to UK cities and master's programmes, checks official fees and deadlines, and plans your application. Built on Qloo.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper: #f1f4f2; --surface: #ffffff; --ink: #17241f; --ink2: #44544d; --muted: #6a7a73; --line: #d6ddd8;
+  --moss: #2f6b5a; --moss-deep: #1f4d40; --sage: #a9c8bc; --sage-soft: #e1ece7; --pollen: #e8b931; --warn: #8a5a00; --warn-soft: #fbf0d6;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #142019; --surface: #1b2a23; --ink: #e9efeb; --ink2: #c3cfc9; --muted: #93a39b; --line: #2c3d35;
+    --moss: #7cc4ad; --moss-deep: #a6dccb; --sage: #3f6b5e; --sage-soft: #213830; --pollen: #f0c94d; --warn: #f0b860; --warn-soft: #3a2f1c;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #142019; --surface: #1b2a23; --ink: #e9efeb; --ink2: #c3cfc9; --muted: #93a39b; --line: #2c3d35;
+  --moss: #7cc4ad; --moss-deep: #a6dccb; --sage: #3f6b5e; --sage-soft: #213830; --pollen: #f0c94d; --warn: #f0b860; --warn-soft: #3a2f1c;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body { margin: 0; background: var(--paper); color: var(--ink); font-family: "Bricolage Grotesque", system-ui, sans-serif;
+  font-size: 17px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+a { color: var(--moss); }
+:focus-visible { outline: 3px solid var(--pollen); outline-offset: 3px; border-radius: 6px; }
+.wrap { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+@media (max-width: 560px) { .wrap { padding: 0 16px; } }
+
+/* top bar */
+.top { display: flex; justify-content: space-between; align-items: center; padding: 22px 0; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 19px; text-decoration: none; color: var(--ink); }
+.brand svg { width: 28px; height: 28px; }
+.top nav { display: flex; gap: 22px; align-items: center; font-size: 15px; }
+.top nav a { color: var(--ink2); text-decoration: none; }
+.top nav a:hover { color: var(--moss); }
+@media (max-width: 720px) { .top nav .hide-sm { display: none; } }
+
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 13px 22px; border-radius: 999px; font: inherit; font-weight: 600;
+  font-size: 16px; text-decoration: none; border: 1.5px solid var(--moss); }
+.btn.primary { background: var(--moss); color: var(--paper); }
+.btn.primary:hover { background: var(--moss-deep); border-color: var(--moss-deep); }
+.btn.ghost { color: var(--moss); background: transparent; }
+.btn.ghost:hover { background: var(--sage-soft); }
+.btn.small { padding: 8px 16px; font-size: 14px; }
+
+/* hero */
+.hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 48px; align-items: center; padding: 40px 0 72px; }
+@media (max-width: 900px) { .hero { grid-template-columns: minmax(0, 1fr); gap: 24px; padding-top: 16px; } }
+.hero h1 { font-size: clamp(40px, 6.2vw, 74px); line-height: 0.98; letter-spacing: -0.035em; font-weight: 800; margin: 0 0 22px;
+  font-variation-settings: "opsz" 96; max-width: 11ch; }
+.hero p.lede { font-size: 19px; color: var(--ink2); max-width: 34em; margin: 0 0 30px; }
+.hero .cta { display: flex; gap: 12px; flex-wrap: wrap; }
+.hero .fine { margin-top: 18px; font-size: 14px; color: var(--muted); }
+
+/* the map */
+.map { position: relative; background: var(--surface); border: 1px solid var(--line); border-radius: 28px; padding: 18px 18px 14px; }
+.map svg { width: 100%; height: auto; max-height: 620px; display: block; margin: 0 auto; }
+.map .city { transform-box: fill-box; transform-origin: center; }
+.map text { font-family: inherit; fill: var(--ink); }
+.map .lbl, .map .lbl-dim { paint-order: stroke; stroke: var(--surface); stroke-width: 4px; stroke-linejoin: round; }
+.map .lbl { font-size: 13px; font-weight: 600; }
+.map .lbl-dim { font-size: 11.5px; fill: var(--muted); font-weight: 500; }
+.map .rank { font-size: 11px; font-weight: 700; fill: var(--paper); }
+.map figcaption { font-size: 13.5px; color: var(--muted); padding: 8px 6px 2px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 6px 6px 0; }
+.chip { font-size: 13px; padding: 4px 11px; border-radius: 999px; background: var(--sage-soft); color: var(--moss-deep); font-weight: 500; }
+.legend { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--muted); padding: 2px 6px 0; }
+.legend i { display: inline-block; width: 110px; height: 8px; border-radius: 4px; background: linear-gradient(90deg, var(--sage-soft), var(--sage), var(--moss)); }
+@media (prefers-reduced-motion: no-preference) {
+  .map .city.anim { animation: bloom .7s cubic-bezier(.2, .8, .2, 1.2) both; }
+  @keyframes bloom { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+}
+
+/* sections */
+section.block { padding: 76px 0; border-top: 1px solid var(--line); }
+section.block h2 { font-size: clamp(30px, 3.6vw, 44px); line-height: 1.05; letter-spacing: -0.025em; font-weight: 750; margin: 0 0 14px; max-width: 20ch; }
+section.block .intro { color: var(--ink2); max-width: 40em; margin: 0 0 36px; font-size: 18px; }
+
+/* chatbot vs agent */
+.versus { width: 100%; border-collapse: collapse; font-size: 16px; }
+.versus th { text-align: left; font-size: 15px; font-weight: 700; padding: 0 18px 14px 0; vertical-align: bottom; }
+.versus th.us { color: var(--moss); }
+.versus td { padding: 16px 18px 16px 0; border-top: 1px solid var(--line); vertical-align: top; }
+.versus td:first-child { font-weight: 600; width: 22%; }
+.versus td.them { color: var(--muted); width: 36%; }
+.versus td.us { width: 42%; }
+.versus .eg { display: block; margin-top: 4px; font-size: 14px; color: var(--muted); }
+@media (max-width: 720px) {
+  .versus thead { display: none; }
+  .versus tr { display: block; border-top: 1px solid var(--line); padding: 14px 0; }
+  .versus td { display: block; border: 0; padding: 3px 0; width: auto !important; }
+  .versus td.them::before { content: "General chatbot: "; font-weight: 600; }
+  .versus td.us::before { content: "TasteCompass: "; font-weight: 600; color: var(--moss); }
+}
+
+/* steps */
+ol.steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; counter-reset: s; }
+@media (max-width: 900px) { ol.steps { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); row-gap: 28px; } }
+@media (max-width: 560px) { ol.steps { grid-template-columns: minmax(0, 1fr); } }
+ol.steps li { counter-increment: s; padding: 0 24px 0 0; position: relative; }
+ol.steps li::before { content: counter(s); display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%;
+  background: var(--moss); color: var(--paper); font-weight: 700; font-size: 17px; margin-bottom: 16px; position: relative; z-index: 1; }
+ol.steps li::after { content: ""; position: absolute; top: 20px; left: 40px; right: 0; height: 2px; background: var(--sage); }
+ol.steps li:last-child::after { display: none; }
+@media (max-width: 900px) { ol.steps li::after { display: none; } }
+ol.steps h3 { font-size: 19px; margin: 0 0 6px; letter-spacing: -0.01em; }
+ol.steps p { margin: 0; color: var(--ink2); font-size: 15.5px; }
+
+/* qloo */
+.qloo { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+@media (max-width: 900px) { .qloo { grid-template-columns: minmax(0, 1fr); } }
+.qloo article { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 24px; }
+.qloo h3 { font-size: 20px; margin: 0 0 8px; letter-spacing: -0.01em; }
+.qloo p { margin: 0 0 16px; color: var(--ink2); font-size: 15.5px; }
+.qloo .ex { border-top: 1px dashed var(--line); padding-top: 14px; font-size: 14.5px; }
+.qloo .ex b { font-weight: 600; }
+.qloo .ex .to { color: var(--moss); font-weight: 600; }
+
+/* honest data */
+.honest { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 48px; align-items: start; }
+@media (max-width: 900px) { .honest { grid-template-columns: minmax(0, 1fr); gap: 24px; } }
+.honest .intro { margin-bottom: 20px; }
+.unis { display: flex; flex-wrap: wrap; gap: 8px; }
+.unis span { background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; font-size: 14.5px; font-weight: 500; }
+.sample { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 22px 24px; font-size: 15px; }
+.sample h3 { margin: 0 0 2px; font-size: 18px; }
+.sample .where { color: var(--muted); font-size: 14px; margin-bottom: 14px; }
+.sample dl { display: grid; grid-template-columns: auto 1fr; gap: 8px 18px; margin: 0 0 14px; }
+.sample dt { color: var(--muted); }
+.sample dd { margin: 0; font-weight: 600; }
+.sample dd.unv { color: var(--warn); font-weight: 500; }
+.sample .src { font-size: 13.5px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 12px; }
+
+/* closing */
+.closing { padding: 88px 0 96px; border-top: 1px solid var(--line); }
+.closing h2 { font-size: clamp(34px, 4.6vw, 58px); line-height: 1; letter-spacing: -0.03em; font-weight: 800; margin: 0 0 24px; max-width: 16ch; }
+footer { border-top: 1px solid var(--line); padding: 26px 0 40px; font-size: 14px; color: var(--muted); }
+footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="/" aria-label="TasteCompass home">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2.4" style="color:var(--moss)"/>
+        <path d="M16 6 L19.5 16 L16 26 L12.5 16 Z" fill="var(--moss)"/><circle cx="16" cy="16" r="2.4" fill="var(--pollen)"/></svg>
+      TasteCompass
+    </a>
+    <nav>
+      <a class="hide-sm" href="#why">Why it's different</a>
+      <a class="hide-sm" href="#how">How it works</a>
+      <a class="hide-sm" href="#qloo">Built on Qloo</a>
+      <a class="btn primary small" href="/app">Open the app</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div>
+        <h1>Find a master's in a city that feels like yours.</h1>
+        <p class="lede">Tell TasteCompass the music, films, food and hobbies you love. It reads your taste through Qloo, finds the UK cities that match it,
+          then checks real programmes, fees and deadlines on official course pages and plans your application.</p>
+        <div class="cta">
+          <a class="btn primary" href="/app">Try TasteCompass</a>
+          <a class="btn ghost" href="#how">See how it works</a>
+        </div>
+        <p class="fine">Free to try. No sign-up. 110 UK universities across 63 cities.</p>
+      </div>
+
+      <figure class="map" style="margin:0">
+        <div class="chips" aria-label="Example tastes">
+          <span class="chip">Radiohead</span><span class="chip">Banksy</span><span class="chip">Specialty coffee</span><span class="chip">Hiking</span><span class="chip">Studio Ghibli</span>
+        </div>
+        <svg id="ukmap" viewBox="0 0 400 600" role="img" aria-labelledby="mapTitle mapDesc">
+          <title id="mapTitle">UK student cities by taste fit</title>
+          <desc id="mapDesc">Dots for 63 UK university cities. The 24 major student cities are coloured by how well they match the example tastes; Bath, Birmingham, Southampton, Nottingham and Bristol fit best, London and St Andrews least.</desc>
+        </svg>
+        <div class="legend"><span>Weaker fit</span><i></i><span>Closer to your taste</span></div>
+        <figcaption>A real run on Qloo's UK-wide taste heatmap for the tastes above. Grey dots are other university towns, listed but not ranked on taste.</figcaption>
+      </figure>
+    </section>
+
+    <section class="block" id="why">
+      <h2>A chatbot can describe cities. It can't check your deadline.</h2>
+      <p class="intro">General-purpose LLMs answer study-abroad questions from memory. TasteCompass is an agent: it calls Qloo for taste, reads official
+        course data for facts, and only plans from what it can source.</p>
+      <table class="versus">
+        <thead><tr><th scope="col"></th><th scope="col">General chatbot</th><th scope="col" class="us">TasteCompass</th></tr></thead>
+        <tbody>
+          <tr><td>Fees and deadlines</td><td class="them">Answers from training data, often last year's figures, with no source.</td>
+            <td class="us">Taken from the official course page, with the link and the date we checked.<span class="eg">UCL Emerging Digital Technologies MSc: apply by 22 Mar 2027 if you need a visa.</span></td></tr>
+          <tr><td>Missing information</td><td class="them">Fills the gap with a plausible-sounding guess.</td>
+            <td class="us">Marks it unverified and scores it neutral, so a gap never helps or hurts a programme.</td></tr>
+          <tr><td>City fit</td><td class="them">Generic descriptions: "vibrant", "historic", "student-friendly".</td>
+            <td class="us">Your own tastes scored on Qloo's taste graph across 24 major student cities, with the places that drove the score.</td></tr>
+          <tr><td>What you've decided</td><td class="them">Drifts outside your constraints as the chat goes on.</td>
+            <td class="us">Anything you've fixed (country, city or programmes) is a hard filter. Better options outside it are shown separately.</td></tr>
+          <tr><td>Next steps</td><td class="them">A generic checklist.</td>
+            <td class="us">A dated timeline worked back from the next open application round, ready to add to your calendar.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="block" id="how">
+      <h2>From what you love to a plan with dates.</h2>
+      <p class="intro">Start wherever you are. Undecided on everything, or already set on two programmes, the agent picks the right tools for your situation.</p>
+      <ol class="steps">
+        <li><h3>Say what's decided</h3><p>Nothing yet, the country, a city, or specific programmes. Whatever you fix stays fixed.</p></li>
+        <li><h3>Share your tastes</h3><p>Artists, films, books, food and hobbies. Qloo turns them into a taste profile and scores every major student city.</p></li>
+        <li><h3>Weigh what matters</h3><p>Programmes are scored on taste, academic fit, budget and English requirements. Drag the weights to match your priorities.</p></li>
+        <li><h3>Get a dated plan</h3><p>For each pick: when to book IELTS, ask referees and submit, worked back from the real deadline.</p></li>
+      </ol>
+    </section>
+
+    <section class="block" id="qloo">
+      <h2>Qloo does the part no chatbot can.</h2>
+      <p class="intro">Without Qloo, TasteCompass would be another search box. With it, "where would I be happy?" becomes something you can measure.</p>
+      <div class="qloo">
+        <article>
+          <h3>Understands your taste</h3>
+          <p>Each interest is matched in Qloo's taste graph. Works and people become entities; activities become tags.</p>
+          <div class="ex"><b>Radiohead</b> <span class="to">becomes</span> an artist entity<br><b>Hiking</b> <span class="to">becomes</span> an activity tag</div>
+        </article>
+        <article>
+          <h3>Compares cities on one map</h3>
+          <p>One Qloo heatmap covers the whole UK, so every city is scored on the same scale, measured within 10 km of its centre.</p>
+          <div class="ex">For the example tastes, <b>Bath</b> and <b>Bristol</b> rank near the top; <b>London</b> sits near the bottom.</div>
+        </article>
+        <article>
+          <h3>Shows what you'd love there</h3>
+          <p>Qloo's place recommendations, filtered to the city and cleaned of national chains, become a first week you'd actually enjoy.</p>
+          <div class="ex">In Bristol: <b>Bristol Museum &amp; Art Gallery</b>, <b>Spike Island</b>, <b>The Radnor Rooms</b></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="block" id="data">
+      <div class="honest">
+        <div>
+          <h2>Every number has a source.</h2>
+          <p class="intro">Programme facts are checked by hand on official course pages for 2027 entry. Where a page doesn't say, TasteCompass says so.
+            Every university in 63 UK cities is listed with its official site, so you can keep exploring.</p>
+          <div class="unis" aria-label="Universities with verified programmes">
+            <span>Oxford</span><span>Cambridge</span><span>Imperial</span><span>LSE</span><span>UCL</span><span>King's College London</span>
+            <span>Edinburgh</span><span>Manchester</span><span>Bristol</span><span>Glasgow</span><span>Leeds</span>
+          </div>
+        </div>
+        <div class="sample" aria-label="Example programme record">
+          <h3>Social Data Science MSc</h3>
+          <div class="where">University of Oxford</div>
+          <dl>
+            <dt>Overseas fee</dt><dd>£40,730</dd>
+            <dt>Deadlines</dt><dd>13 Nov 2026 and 7 Jan 2027</dd>
+            <dt>IELTS</dt><dd>7.5 overall, 7.0 in each part</dd>
+            <dt>Decision date</dt><dd class="unv">Not stated on the page</dd>
+          </dl>
+          <div class="src">Source: ox.ac.uk course page, checked 27 Oct 2026</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="closing">
+      <h2>Your next two years should feel like you.</h2>
+      <a class="btn primary" href="/app">Try TasteCompass</a>
+    </section>
+  </main>
+</div>
+
+<footer>
+  <div class="wrap">
+    <span>Built by Belle for the Qloo Agentic Hackathon 2026. Taste data from the Qloo Insights API.</span>
+    <span><a href="https://github.com/utonez/tastecompass">Source on GitHub</a></span>
+  </div>
+</footer>
+
+<script>
+// Real run (live Qloo heatmap, 27 Oct 2026) for the example tastes; s = taste fit scaled 0-1 across the 24 ranked cities.
+const RANKED = [["Bath",51.3811,-2.359,1],["Birmingham",52.4862,-1.8904,.99],["Southampton",50.9097,-1.4044,.99],["Nottingham",52.9548,-1.1581,.95],
+  ["Bristol",51.4545,-2.5879,.94],["Coventry",52.4068,-1.5197,.91],["Oxford",51.752,-1.2577,.89],["Leeds",53.8008,-1.5491,.88],["Sheffield",53.3811,-1.4701,.86],
+  ["Cambridge",52.2053,.1218,.83],["Newcastle",54.9783,-1.6178,.82],["Liverpool",53.4084,-2.9916,.75],["Cardiff",51.4816,-3.1791,.73],["Exeter",50.7184,-3.5339,.56],
+  ["Edinburgh",55.9533,-3.1883,.55],["Brighton",50.8225,-.1372,.55],["Lancaster",54.0466,-2.8007,.54],["York",53.96,-1.0873,.44],["Glasgow",55.8642,-4.2518,.41],
+  ["Manchester",53.4808,-2.2426,.39],["London",51.5074,-.1278,.18],["Durham",54.7761,-1.5733,.18],["St Andrews",56.3398,-2.7967,.03],["Belfast",54.5973,-5.9301,0]];
+const OTHER = [[52.6369,-1.1398],[52.7721,-1.2062],[51.4543,-.9781],[51.2362,-.5704],[51.2802,1.0789],[51.8959,.8919],[52.6309,1.2974],[57.1497,-2.0943],
+  [56.462,-2.9707],[56.1165,-3.9369],[51.6214,-3.9436],[52.4153,-4.0829],[53.2274,-4.1293],[53.7676,-.3274],[53.796,-1.7594],[53.6458,-1.785],[50.3755,-4.1427],
+  [50.8198,-1.088],[50.7192,-1.8808],[53.0027,-2.1794],[52.9225,-1.4746],[53.2307,-.5406],[54.9069,-1.3838],[54.5742,-1.235],[52.5862,-2.1288],[51.7634,-.2231],
+  [51.8787,-.42],[52.2405,-.9027],[53.1934,-2.8931],[53.7632,-2.7031],[53.5769,-2.4282],[52.192,-2.22],[51.8994,-2.0783],[52.0738,-.629],[51.9994,-.987],
+  [51.4256,-.563],[51.5461,-.4784],[51.0632,-1.308],[50.8365,-.7792]];
+(function draw() {
+  const svg = document.getElementById("ukmap"), NS = "http://www.w3.org/2000/svg";
+  const k = Math.cos(54 * Math.PI / 180), lonMin = -6.15, lonMax = 1.5, latMin = 50.25, latMax = 57.3;
+  const W = 400, H = 600, pad = 20;
+  const sx = (W - 2 * pad) / ((lonMax - lonMin) * k), sy = (H - 2 * pad) / (latMax - latMin), s = Math.min(sx, sy);
+  const X = lon => pad + (lon - lonMin) * k * s + ((W - 2 * pad) - (lonMax - lonMin) * k * s) / 2, Y = lat => pad + (latMax - lat) * s;
+  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const mix = (a, b, t) => { const p = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+    const A = p(a), B = p(b); return `rgb(${A.map((v, i) => Math.round(v + (B[i] - v) * t)).join(",")})`; };
+  const el = (tag, attrs) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; };
+  for (const [lat, lon] of OTHER) svg.append(el("circle", { cx: X(lon), cy: Y(lat), r: 3, fill: css("--line") }));
+  const sage = css("--sage-soft"), moss = css("--moss");
+  const order = [...RANKED].sort((a, b) => a[3] - b[3]);      // draw strongest last so it sits on top
+  // label side per city, chosen so labels don't sit on neighbouring dots
+  const LABEL = { Bath: "right", Birmingham: "right", Nottingham: "right", Southampton: "left", Bristol: "above", London: "right", Edinburgh: "right", Glasgow: "left" };
+  const labels = [];
+  const top = [...RANKED].sort((a, b) => b[3] - a[3]).slice(0, 5).map(r => r[0]);
+  order.forEach(([name, lat, lon, v], i) => {
+    const g = el("g", { class: "city anim", style: `animation-delay:${(1 - v) * 0.6 + 0.15}s` });
+    const r = 5 + v * 11;
+    g.append(el("circle", { cx: X(lon), cy: Y(lat), r, fill: mix(sage.startsWith("#") ? sage : "#e1ece7", moss.startsWith("#") ? moss : "#2f6b5a", v),
+      stroke: top[0] === name ? css("--pollen") : "none", "stroke-width": 3 }));
+    const ti = el("title", {}); ti.textContent = `${name}: taste fit ${Math.round(v * 100)}`; g.append(ti);
+    const rank = top.indexOf(name);
+    if (rank >= 0) { const t = el("text", { x: X(lon), y: Y(lat) + 4, "text-anchor": "middle", class: "rank" }); t.textContent = rank + 1; g.append(t); }
+    svg.append(g);
+    const side = LABEL[name];
+    if (side) {
+      const pos = side === "right" ? { x: X(lon) + r + 6, y: Y(lat) + 4, a: "start" } : side === "left" ? { x: X(lon) - r - 6, y: Y(lat) + 4, a: "end" }
+        : { x: X(lon) - 4, y: Y(lat) - r - 7, a: "middle" };
+      const t = el("text", { x: pos.x, y: pos.y, "text-anchor": pos.a, class: v > .5 ? "lbl" : "lbl-dim" });
+      t.textContent = name; labels.push(t);
+    }
+  });
+  labels.forEach(t => svg.append(t));      // labels last, above every dot
+})();
+</script>
+</body>
+</html>

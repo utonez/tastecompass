@@ -1,0 +1,15 @@
+{
+  "_meta": "SYNTHETIC mock entities for offline development. IDs and tags are invented; replace with real /search results once the key works.",
+  "entities": [
+    {"entity_id": "MOCK-ART-RADIOHEAD", "name": "Radiohead", "subtype": "urn:entity:artist", "tags": ["indie", "live music", "art"]},
+    {"entity_id": "MOCK-FILM-GHIBLI", "name": "Spirited Away", "aliases": ["studio ghibli", "ghibli"], "subtype": "urn:entity:movie", "tags": ["art", "cafes", "literature"]},
+    {"entity_id": "MOCK-PLACE-COFFEE", "name": "Specialty coffee", "aliases": ["coffee", "cafe"], "subtype": "urn:entity:place", "tags": ["cafes", "indie"]},
+    {"entity_id": "MOCK-TAG-HIKING", "name": "Hiking", "aliases": ["hike", "outdoors"], "subtype": "urn:entity:place", "tags": ["outdoors", "hiking"]},
+    {"entity_id": "MOCK-TAG-STREETART", "name": "Banksy", "aliases": ["street art", "graffiti"], "subtype": "urn:entity:person", "tags": ["street art", "art", "indie"]},
+    {"entity_id": "MOCK-BOOK-HARRYPOTTER", "name": "Harry Potter", "aliases": ["harry potter books"], "subtype": "urn:entity:book", "tags": ["literature", "history", "festivals"]},
+    {"entity_id": "MOCK-TV-SUITS", "name": "Suits", "subtype": "urn:entity:tv_show", "tags": ["finance", "fine dining", "nightlife"]},
+    {"entity_id": "MOCK-ART-TAYLOR", "name": "Taylor Swift", "subtype": "urn:entity:artist", "tags": ["live music", "shopping", "nightlife"]},
+    {"entity_id": "MOCK-TAG-FOOTBALL", "name": "Premier League football", "aliases": ["football", "soccer"], "subtype": "urn:entity:place", "tags": ["football", "nightlife", "street food"]},
+    {"entity_id": "MOCK-TAG-THEATRE", "name": "Les Misérables", "aliases": ["musicals", "theatre"], "subtype": "urn:entity:place", "tags": ["theatre", "museums", "history"]}
+  ]
+}

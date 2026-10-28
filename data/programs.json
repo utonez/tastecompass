@@ -1,0 +1,575 @@
+{
+  "_meta": {
+    "description": "Hand-curated UK master's programmes. Every value comes from the official course page in source_url, read on checked_on. null = not found on the official page yet; the agent shows these as 'unverified' instead of guessing.",
+    "data_year_note": "data_entry_year is the intake the figures belong to. If it is earlier than the target intake, the agent warns that the figures are from a previous cycle.",
+    "checked_on": "2026-10-21"
+  },
+  "programs": [
+    {
+      "id": "ucl-edt",
+      "school": "University College London (UCL)",
+      "city_id": "london",
+      "name": "Emerging Digital Technologies MSc",
+      "field_tags": [
+        "blockchain",
+        "fintech",
+        "data science",
+        "computer science",
+        "digital strategy"
+      ],
+      "modules": [
+        "Data Science",
+        "Blockchain Technologies",
+        "Digital Technologies and Business Strategy",
+        "Database Fundamentals",
+        "Algorithmic Trading",
+        "Digital Finance",
+        "Advanced Machine Learning in Finance",
+        "Distributed Ledger Technologies Seminar"
+      ],
+      "duration": "1 calendar year full-time",
+      "data_entry_year": 2027,
+      "fee_overseas_gbp": 40800,
+      "deadline_overseas": "2027-03-22",
+      "deadline_note": "2027 entry: applicants needing a visa apply 19 Oct 2026 - 22 Mar 2027 (5pm UK time); no-visa applicants until 27 Aug 2027.",
+      "rounds": null,
+      "english": {
+        "ielts_overall": 7.0,
+        "ielts_min_component": 6.5,
+        "note": "UCL Level 3: IELTS 7.0 overall, 6.5 in reading & writing, 7.0 in listening & speaking"
+      },
+      "entry_requirement": "UK 2:1 or equivalent in computer science, mathematics, statistics, physics, engineering or a similarly quantitative subject",
+      "source_url": "https://www.ucl.ac.uk/study/prospective-students/graduate/courses/emerging-digital-technologies-msc",
+      "checked_on": "2026-10-27",
+      "university_id": "university-college-london"
+    },
+    {
+      "id": "kcl-cf",
+      "school": "King's College London (KCL)",
+      "city_id": "london",
+      "name": "Computational Finance MSc",
+      "field_tags": [
+        "fintech",
+        "quantitative finance",
+        "computer science",
+        "blockchain",
+        "machine learning"
+      ],
+      "modules": [
+        "Scientific computing",
+        "Numerical methods",
+        "High-performance computing",
+        "Distributed ledgers",
+        "Big-data analytics",
+        "Agent-based modelling",
+        "Machine learning",
+        "Programming for finance"
+      ],
+      "duration": "1 year full-time",
+      "data_entry_year": 2027,
+      "fee_overseas_gbp": 45400,
+      "deadline_overseas": "2027-07-25",
+      "deadline_note": "First application deadline 9 Mar 2027; final deadline for overseas fee status 25 Jul 2027 (23:59 UK time). Apply early.",
+      "rounds": [
+        {
+          "round": 1,
+          "deadline": "2027-03-09",
+          "decision_by": "not stated"
+        },
+        {
+          "round": 2,
+          "deadline": "2027-07-25",
+          "decision_by": "not stated"
+        }
+      ],
+      "english": {
+        "ielts_overall": 7.0,
+        "ielts_min_component": 6.5,
+        "note": "KCL English Band B: IELTS 7.0 overall, 6.5 in each skill"
+      },
+      "entry_requirement": "High 2:1 (65%+) in computer science or a quantitative subject; calculus, linear algebra and programming expected",
+      "source_url": "https://www.kcl.ac.uk/study/postgraduate-taught/courses/computational-finance-msc",
+      "checked_on": "2026-10-27",
+      "university_id": "king-s-college-london"
+    },
+    {
+      "id": "imperial-baai",
+      "school": "Imperial College London",
+      "city_id": "london",
+      "name": "Business Analytics and AI MSc",
+      "field_tags": [
+        "business analytics",
+        "machine learning",
+        "data science",
+        "ai"
+      ],
+      "modules": [
+        "Data Structures and Algorithms",
+        "Deep Learning and Generative AI",
+        "Data Wrangling and Visualisation",
+        "Fundamentals of Database Technologies",
+        "Machine Learning",
+        "Maths and Statistics Foundations for Analytics",
+        "Optimisation and Decision Models",
+        "Statistics and Econometrics",
+        "Financial Analytics",
+        "Generative AI and Large Language Models"
+      ],
+      "duration": "1 year full-time (starts August 2027)",
+      "data_entry_year": 2027,
+      "fee_overseas_gbp": 51000,
+      "deadline_overseas": "2027-04-28",
+      "deadline_note": "Staged admissions; early application advised. Round 1 (Business School only) closed 29 Sep 2026.",
+      "rounds": [
+        {
+          "round": 1,
+          "deadline": "2026-09-29",
+          "decision_by": "2026-11-25"
+        },
+        {
+          "round": 2,
+          "deadline": "2027-01-06",
+          "decision_by": "2027-03-03"
+        },
+        {
+          "round": 3,
+          "deadline": "2027-03-10",
+          "decision_by": "2027-05-05"
+        },
+        {
+          "round": 4,
+          "deadline": "2027-04-28",
+          "decision_by": "2027-07-01"
+        }
+      ],
+      "english": {
+        "ielts_overall": null,
+        "ielts_min_component": null,
+        "note": "Imperial 'higher' English requirement (see Imperial's English language requirements page for scores)"
+      },
+      "entry_requirement": "2:1 in a quantitative subject (maths, statistics, CS, engineering, physics or quantitative economics); GMAT optional",
+      "source_url": "https://www.imperial.ac.uk/study/courses/postgraduate-taught/2027/business-analytics/",
+      "checked_on": "2026-10-27",
+      "university_id": "imperial-college-london"
+    },
+    {
+      "id": "lse-misdi",
+      "school": "London School of Economics (LSE)",
+      "city_id": "london",
+      "name": "Management of Information Systems and Digital Innovation MSc",
+      "field_tags": [
+        "information systems",
+        "digital innovation",
+        "management"
+      ],
+      "modules": [
+        "Innovating Organisational Information Technology",
+        "Sprint Week client project",
+        "Four core courses in digital innovation",
+        "Dissertation (8,000 words)"
+      ],
+      "duration": "12 months full-time",
+      "data_entry_year": 2027,
+      "fee_overseas_gbp": 41900,
+      "deadline_overseas": null,
+      "deadline_note": "No fixed deadline - rolling admissions; closes when full. Funding has earlier deadlines.",
+      "rounds": null,
+      "english": {
+        "ielts_overall": null,
+        "ielts_min_component": null,
+        "note": "LSE 'Standard' English requirement (see LSE's English language requirements page)"
+      },
+      "entry_requirement": "2:1 or equivalent in any discipline; GRE/GMAT not required",
+      "source_url": "https://www.lse.ac.uk/study-at-lse/graduate/msc-management-information-systems-and-digital-innovation",
+      "checked_on": "2026-10-27",
+      "university_id": "london-school-of-economics",
+      "rolling": true
+    },
+    {
+      "id": "man-baai",
+      "school": "University of Manchester",
+      "city_id": "manchester",
+      "name": "Business Analytics and Artificial Intelligence MSc",
+      "field_tags": [
+        "business analytics",
+        "machine learning",
+        "data science",
+        "fintech"
+      ],
+      "modules": [
+        "Risk, Performance and Decision Analysis",
+        "Mathematical Programming and Optimisation",
+        "Machine Learning for Business",
+        "Applied Statistics and Business Forecasting",
+        "Python Programming for Business Analytics",
+        "AI Ethics",
+        "Financial Data Analytics & AI in Finance",
+        "Digital Strategy"
+      ],
+      "duration": "1 year full-time",
+      "data_entry_year": 2026,
+      "fee_overseas_gbp": 35700,
+      "deadline_overseas": "2027-08-23",
+      "deadline_note": "2027 entry: 5 staged deadlines (Alliance MBS); applications open 10 Oct 2026. 2027 fee not yet published - 35,700 is the Sept 2026 fee.",
+      "rounds": [
+        {
+          "round": 1,
+          "deadline": "2026-12-06",
+          "decision_by": "2027-02-19"
+        },
+        {
+          "round": 2,
+          "deadline": "2027-03-01",
+          "decision_by": "2027-05-02"
+        },
+        {
+          "round": 3,
+          "deadline": "2027-05-04",
+          "decision_by": "2027-06-18"
+        },
+        {
+          "round": 4,
+          "deadline": "2027-07-04",
+          "decision_by": "2027-07-30"
+        },
+        {
+          "round": 5,
+          "deadline": "2027-08-23",
+          "decision_by": "2027-08-31"
+        }
+      ],
+      "english": {
+        "ielts_overall": 7.0,
+        "ielts_min_component": 6.5,
+        "note": "Alliance MBS: IELTS 7.0 overall, no element below 6.5"
+      },
+      "entry_requirement": "First or 2:1 (60% average) in a quantitative subject; maths modules essential, programming desirable",
+      "source_url": "https://www.manchester.ac.uk/study/masters/courses/list/22043/msc-business-analytics-and-artificial-intelligence/",
+      "checked_on": "2026-10-27",
+      "university_id": "university-of-manchester"
+    },
+    {
+      "id": "bris-ftds",
+      "school": "University of Bristol",
+      "city_id": "bristol",
+      "name": "Financial Technology with Data Science MSc",
+      "field_tags": [
+        "fintech",
+        "data science",
+        "computer science",
+        "machine learning"
+      ],
+      "modules": [
+        "Large-Scale Data Engineering",
+        "Introduction to Financial Technology",
+        "Introduction to AI and Data Analytics",
+        "Advanced Financial Technology",
+        "Financial Technology Group Project"
+      ],
+      "duration": "1 year full-time",
+      "data_entry_year": 2027,
+      "fee_overseas_gbp": 37900,
+      "deadline_overseas": "2027-08-12",
+      "deadline_note": "Places allocated continuously and may fill early.",
+      "rounds": null,
+      "english": {
+        "ielts_overall": 6.5,
+        "ielts_min_component": 6.5,
+        "note": "Bristol profile C: IELTS 6.5 with 6.5 in all skills"
+      },
+      "entry_requirement": "Typically 2:1 in a numerate science, computer science or engineering (economics/finance also listed)",
+      "source_url": "https://www.bristol.ac.uk/study/postgraduate/taught/msc-financial-technology-with-data-science/",
+      "checked_on": "2026-10-27",
+      "university_id": "university-of-bristol"
+    },
+    {
+      "id": "bris-ft",
+      "school": "University of Bristol",
+      "city_id": "bristol",
+      "name": "Financial Technology MSc",
+      "field_tags": [
+        "fintech",
+        "finance",
+        "machine learning",
+        "blockchain"
+      ],
+      "modules": [
+        "Finance and financial markets",
+        "Quantitative methods, big data and machine learning",
+        "AI, blockchain technology and financial applications",
+        "Financial modelling and entrepreneurial finance",
+        "Algorithmic Trading",
+        "Master's Impact Project"
+      ],
+      "duration": "1 year full-time",
+      "data_entry_year": 2027,
+      "fee_overseas_gbp": 39000,
+      "deadline_overseas": "2027-08-12",
+      "deadline_note": "Overseas deadline 12 Aug 2027; places allocated continuously from Sept 2026 and may close early.",
+      "rounds": null,
+      "english": {
+        "ielts_overall": 7.0,
+        "ielts_min_component": 6.5,
+        "note": "Bristol profile B (PG): IELTS 7.0 overall with 6.5 in all skills"
+      },
+      "entry_requirement": "2:1 in a quantitative subject (finance, economics, CS, maths, engineering...); otherwise three maths units at 60%+",
+      "source_url": "https://www.bristol.ac.uk/study/postgraduate/taught/msc-financial-technology/",
+      "checked_on": "2026-10-27",
+      "university_id": "university-of-bristol"
+    },
+    {
+      "id": "leeds-misdi",
+      "school": "University of Leeds",
+      "city_id": "leeds",
+      "name": "Management of Information Systems and Digital Innovation MSc",
+      "field_tags": [
+        "information systems",
+        "digital innovation",
+        "management",
+        "business analytics"
+      ],
+      "modules": [
+        "Managing Digital Information Projects",
+        "Human Centred AI",
+        "Digital Transformation Management",
+        "Innovation in Operations and Information Systems",
+        "Research Design and Analysis",
+        "Digital Innovation and Social Media",
+        "Business Analytics and Decision Science",
+        "Creating Effective Data Visualisations"
+      ],
+      "duration": "12 months full-time",
+      "data_entry_year": 2027,
+      "fee_overseas_gbp": 32600,
+      "deadline_overseas": null,
+      "deadline_note": "2027 page gives no deadline yet; advises international students to apply early for visa time (the 2025 cycle closed 26 Jun for international applicants).",
+      "rounds": null,
+      "english": {
+        "ielts_overall": 6.5,
+        "ielts_min_component": 6.0,
+        "note": null
+      },
+      "entry_requirement": "2:1 in business, management, computing, information systems, engineering or similar",
+      "source_url": "https://courses.leeds.ac.uk/j796/management-of-information-systems-and-digital-innovation-msc",
+      "checked_on": "2026-10-27",
+      "university_id": "university-of-leeds"
+    },
+    {
+      "id": "ed-ba",
+      "school": "University of Edinburgh",
+      "city_id": "edinburgh",
+      "name": "Business Analytics MSc",
+      "field_tags": [
+        "business analytics",
+        "data science",
+        "machine learning"
+      ],
+      "modules": [],
+      "duration": "1 year full-time",
+      "data_entry_year": 2027,
+      "fee_overseas_gbp": null,
+      "deadline_overseas": "2027-06-09",
+      "deadline_note": "Five rounds; earlier rounds give earlier decisions. Fee is on a separate 2027 fee page.",
+      "rounds": [
+        {
+          "round": 1,
+          "deadline": "2026-10-14",
+          "decision_by": "2026-12-03"
+        },
+        {
+          "round": 2,
+          "deadline": "2026-12-09",
+          "decision_by": "2027-02-18"
+        },
+        {
+          "round": 3,
+          "deadline": "2027-02-10",
+          "decision_by": "2027-04-22"
+        },
+        {
+          "round": 4,
+          "deadline": "2027-04-21",
+          "decision_by": "2027-06-03"
+        },
+        {
+          "round": 5,
+          "deadline": "2027-06-09",
+          "decision_by": "2027-07-22"
+        }
+      ],
+      "english": {
+        "ielts_overall": 7.0,
+        "ielts_min_component": 6.0,
+        "note": "IELTS One Skill Retake not accepted"
+      },
+      "entry_requirement": "UK 2:1 in a quantitative subject (management science, statistics, maths, CS, engineering, quantitative business)",
+      "source_url": "https://study.ed.ac.uk/programmes/postgraduate-taught/929-business-analytics",
+      "checked_on": "2026-10-21",
+      "university_id": "university-of-edinburgh"
+    },
+    {
+      "id": "ed-ftp",
+      "school": "University of Edinburgh",
+      "city_id": "edinburgh",
+      "name": "Finance, Technology and Policy MSc",
+      "field_tags": [
+        "fintech",
+        "policy",
+        "finance"
+      ],
+      "modules": [],
+      "duration": "1 year full-time",
+      "data_entry_year": 2027,
+      "fee_overseas_gbp": null,
+      "deadline_overseas": "2027-06-09",
+      "deadline_note": "Five rounds, same dates as Business Analytics.",
+      "rounds": [
+        {
+          "round": 1,
+          "deadline": "2026-10-14",
+          "decision_by": "2026-12-03"
+        },
+        {
+          "round": 2,
+          "deadline": "2026-12-09",
+          "decision_by": "2027-02-18"
+        },
+        {
+          "round": 3,
+          "deadline": "2027-02-10",
+          "decision_by": "2027-04-22"
+        },
+        {
+          "round": 4,
+          "deadline": "2027-04-21",
+          "decision_by": "2027-06-03"
+        },
+        {
+          "round": 5,
+          "deadline": "2027-06-09",
+          "decision_by": "2027-07-22"
+        }
+      ],
+      "english": {
+        "ielts_overall": 7.0,
+        "ielts_min_component": 6.0,
+        "note": "IELTS One Skill Retake not accepted"
+      },
+      "entry_requirement": "First or 2:1 normally in finance, economics, engineering or informatics; at least one statistics/programming course",
+      "source_url": "https://study.ed.ac.uk/programmes/postgraduate-taught/966-finance-technology-and-policy",
+      "checked_on": "2026-10-21",
+      "university_id": "university-of-edinburgh"
+    },
+    {
+      "id": "gla-ft",
+      "school": "University of Glasgow",
+      "city_id": "glasgow",
+      "name": "Financial Technology MSc",
+      "field_tags": [
+        "fintech",
+        "management",
+        "digital innovation",
+        "machine learning"
+      ],
+      "modules": [
+        "Foundations of Financial Technology",
+        "FinTech Regulation",
+        "Business Models for Innovation in Finance",
+        "Digital Entrepreneurship",
+        "Organisational Security",
+        "Artificial Intelligence in Finance",
+        "Big Data Analytics",
+        "FinTech Risk Management"
+      ],
+      "duration": "12 months full-time",
+      "data_entry_year": 2027,
+      "fee_overseas_gbp": 38670,
+      "deadline_overseas": "2027-07-08",
+      "deadline_note": "International applications in rounds; final round closes 8 July 2027.",
+      "rounds": null,
+      "english": {
+        "ielts_overall": 6.5,
+        "ielts_min_component": 6.0,
+        "note": "IELTS Academic only"
+      },
+      "entry_requirement": "2.1 in business, management or a quantitative subject",
+      "source_url": "https://www.gla.ac.uk/postgraduate/taught/financialtechnology/",
+      "checked_on": "2026-10-21",
+      "university_id": "university-of-glasgow"
+    },
+    {
+      "id": "ox-sds",
+      "university_id": "university-of-oxford",
+      "school": "University of Oxford",
+      "city_id": "oxford",
+      "name": "Social Data Science MSc",
+      "field_tags": [
+        "data science",
+        "machine learning",
+        "social science",
+        "computer science"
+      ],
+      "modules": [
+        "Introduction to Data Science and Machine Learning",
+        "Research Design for Social Data Science",
+        "Data and Society I",
+        "Applied Analytical Statistics",
+        "Data and Society II",
+        "Thesis"
+      ],
+      "duration": "10 months",
+      "data_entry_year": 2027,
+      "fee_overseas_gbp": 40730,
+      "deadline_overseas": "2027-01-07",
+      "deadline_note": "Two deadlines (12:00 UK time): 13 Nov 2026 (earlier decisions) and 7 Jan 2027 (final).",
+      "rounds": [
+        {
+          "round": 1,
+          "deadline": "2026-11-13",
+          "decision_by": "not stated"
+        },
+        {
+          "round": 2,
+          "deadline": "2027-01-07",
+          "decision_by": "not stated"
+        }
+      ],
+      "english": {
+        "ielts_overall": 7.5,
+        "ielts_min_component": 7.0,
+        "note": "Oxford 'higher level' English requirement"
+      },
+      "entry_requirement": "First-class honours degree in any subject (US GPA normally 3.7/4.0)",
+      "source_url": "https://www.ox.ac.uk/admissions/graduate/courses/msc-social-data-science",
+      "checked_on": "2026-10-27"
+    },
+    {
+      "id": "cam-tp",
+      "university_id": "university-of-cambridge",
+      "school": "University of Cambridge",
+      "city_id": "cambridge",
+      "name": "MPhil in Technology Policy",
+      "field_tags": [
+        "technology policy",
+        "management",
+        "digital innovation",
+        "policy"
+      ],
+      "modules": [],
+      "duration": "9 months full-time",
+      "data_entry_year": 2027,
+      "fee_overseas_gbp": null,
+      "deadline_overseas": "2027-02-25",
+      "deadline_note": "Applications open 9 Sep 2026; course may close early. Funding deadlines are earlier (e.g. 14 Oct / 8 Dec 2026).",
+      "rounds": null,
+      "english": {
+        "ielts_overall": null,
+        "ielts_min_component": null,
+        "note": "See the course's English language requirements tab"
+      },
+      "entry_requirement": "Aimed at applicants with a science or engineering background (see Requirements tab)",
+      "source_url": "https://www.postgraduate.study.cam.ac.uk/courses/directory/bmjbmptpl",
+      "checked_on": "2026-10-27"
+    }
+  ]
+}

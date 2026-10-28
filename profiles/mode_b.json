@@ -1,0 +1,10 @@
+{
+  "_comment": "Mode B: country decided (UK), city and school open.",
+  "interests": ["Radiohead", "Specialty coffee", "Banksy", "Hiking", "Studio Ghibli"],
+  "field_interests": ["fintech", "blockchain", "data science"],
+  "tuition_budget_gbp": 38000,
+  "ielts": {"overall": 7.0, "min_component": 6.5},
+  "target_intake": 2027,
+  "scope": {"country": "UK"},
+  "top_n": 3
+}

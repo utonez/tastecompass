@@ -1,0 +1,668 @@
+{
+ "_meta": {
+  "description": "UK universities offering taught master's, by city. url is the official homepage. Programme-level facts live in programs.json only once checked on the official course page; universities without such entries are shown as 'not yet verified'.",
+  "checked_on": "2026-10-27"
+ },
+ "universities": [
+  {
+   "id": "university-college-london",
+   "name": "University College London (UCL)",
+   "city_id": "london",
+   "url": "https://www.ucl.ac.uk/"
+  },
+  {
+   "id": "king-s-college-london",
+   "name": "King's College London (KCL)",
+   "city_id": "london",
+   "url": "https://www.kcl.ac.uk/"
+  },
+  {
+   "id": "imperial-college-london",
+   "name": "Imperial College London",
+   "city_id": "london",
+   "url": "https://www.imperial.ac.uk/"
+  },
+  {
+   "id": "london-school-of-economics",
+   "name": "London School of Economics (LSE)",
+   "city_id": "london",
+   "url": "https://www.lse.ac.uk/"
+  },
+  {
+   "id": "queen-mary-university-of-london",
+   "name": "Queen Mary University of London",
+   "city_id": "london",
+   "url": "https://www.qmul.ac.uk/"
+  },
+  {
+   "id": "city-st-george-s-university-of-london",
+   "name": "City St George's, University of London",
+   "city_id": "london",
+   "url": "https://www.citystgeorges.ac.uk/"
+  },
+  {
+   "id": "birkbeck-university-of-london",
+   "name": "Birkbeck, University of London",
+   "city_id": "london",
+   "url": "https://www.bbk.ac.uk/"
+  },
+  {
+   "id": "goldsmiths-university-of-london",
+   "name": "Goldsmiths, University of London",
+   "city_id": "london",
+   "url": "https://www.gold.ac.uk/"
+  },
+  {
+   "id": "soas-university-of-london",
+   "name": "SOAS University of London",
+   "city_id": "london",
+   "url": "https://www.soas.ac.uk/"
+  },
+  {
+   "id": "kingston-university",
+   "name": "Kingston University",
+   "city_id": "london",
+   "url": "https://www.kingston.ac.uk/"
+  },
+  {
+   "id": "university-of-westminster",
+   "name": "University of Westminster",
+   "city_id": "london",
+   "url": "https://www.westminster.ac.uk/"
+  },
+  {
+   "id": "university-of-greenwich",
+   "name": "University of Greenwich",
+   "city_id": "london",
+   "url": "https://www.gre.ac.uk/"
+  },
+  {
+   "id": "middlesex-university",
+   "name": "Middlesex University",
+   "city_id": "london",
+   "url": "https://www.mdx.ac.uk/"
+  },
+  {
+   "id": "university-of-east-london",
+   "name": "University of East London",
+   "city_id": "london",
+   "url": "https://www.uel.ac.uk/"
+  },
+  {
+   "id": "london-metropolitan-university",
+   "name": "London Metropolitan University",
+   "city_id": "london",
+   "url": "https://www.londonmet.ac.uk/"
+  },
+  {
+   "id": "london-south-bank-university",
+   "name": "London South Bank University",
+   "city_id": "london",
+   "url": "https://www.lsbu.ac.uk/"
+  },
+  {
+   "id": "university-of-roehampton",
+   "name": "University of Roehampton",
+   "city_id": "london",
+   "url": "https://www.roehampton.ac.uk/"
+  },
+  {
+   "id": "university-of-the-arts-london",
+   "name": "University of the Arts London",
+   "city_id": "london",
+   "url": "https://www.arts.ac.uk/"
+  },
+  {
+   "id": "st-mary-s-university-twickenham",
+   "name": "St Mary's University, Twickenham",
+   "city_id": "london",
+   "url": "https://www.stmarys.ac.uk/"
+  },
+  {
+   "id": "royal-holloway-university-of-london",
+   "name": "Royal Holloway, University of London",
+   "city_id": "egham",
+   "url": "https://www.royalholloway.ac.uk/"
+  },
+  {
+   "id": "brunel-university-of-london",
+   "name": "Brunel University of London",
+   "city_id": "uxbridge",
+   "url": "https://www.brunel.ac.uk/"
+  },
+  {
+   "id": "university-of-oxford",
+   "name": "University of Oxford",
+   "city_id": "oxford",
+   "url": "https://www.ox.ac.uk/"
+  },
+  {
+   "id": "oxford-brookes-university",
+   "name": "Oxford Brookes University",
+   "city_id": "oxford",
+   "url": "https://www.brookes.ac.uk/"
+  },
+  {
+   "id": "university-of-cambridge",
+   "name": "University of Cambridge",
+   "city_id": "cambridge",
+   "url": "https://www.cam.ac.uk/"
+  },
+  {
+   "id": "anglia-ruskin-university",
+   "name": "Anglia Ruskin University",
+   "city_id": "cambridge",
+   "url": "https://www.aru.ac.uk/"
+  },
+  {
+   "id": "university-of-manchester",
+   "name": "University of Manchester",
+   "city_id": "manchester",
+   "url": "https://www.manchester.ac.uk/"
+  },
+  {
+   "id": "manchester-metropolitan-university",
+   "name": "Manchester Metropolitan University",
+   "city_id": "manchester",
+   "url": "https://www.mmu.ac.uk/"
+  },
+  {
+   "id": "university-of-salford",
+   "name": "University of Salford",
+   "city_id": "manchester",
+   "url": "https://www.salford.ac.uk/"
+  },
+  {
+   "id": "university-of-bristol",
+   "name": "University of Bristol",
+   "city_id": "bristol",
+   "url": "https://www.bristol.ac.uk/"
+  },
+  {
+   "id": "university-of-the-west-of-england",
+   "name": "University of the West of England (UWE Bristol)",
+   "city_id": "bristol",
+   "url": "https://www.uwe.ac.uk/"
+  },
+  {
+   "id": "university-of-leeds",
+   "name": "University of Leeds",
+   "city_id": "leeds",
+   "url": "https://www.leeds.ac.uk/"
+  },
+  {
+   "id": "leeds-beckett-university",
+   "name": "Leeds Beckett University",
+   "city_id": "leeds",
+   "url": "https://www.leedsbeckett.ac.uk/"
+  },
+  {
+   "id": "university-of-edinburgh",
+   "name": "University of Edinburgh",
+   "city_id": "edinburgh",
+   "url": "https://www.ed.ac.uk/"
+  },
+  {
+   "id": "heriot-watt-university",
+   "name": "Heriot-Watt University",
+   "city_id": "edinburgh",
+   "url": "https://www.hw.ac.uk/"
+  },
+  {
+   "id": "edinburgh-napier-university",
+   "name": "Edinburgh Napier University",
+   "city_id": "edinburgh",
+   "url": "https://www.napier.ac.uk/"
+  },
+  {
+   "id": "queen-margaret-university",
+   "name": "Queen Margaret University",
+   "city_id": "edinburgh",
+   "url": "https://www.qmu.ac.uk/"
+  },
+  {
+   "id": "university-of-glasgow",
+   "name": "University of Glasgow",
+   "city_id": "glasgow",
+   "url": "https://www.gla.ac.uk/"
+  },
+  {
+   "id": "university-of-strathclyde",
+   "name": "University of Strathclyde",
+   "city_id": "glasgow",
+   "url": "https://www.strath.ac.uk/"
+  },
+  {
+   "id": "glasgow-caledonian-university",
+   "name": "Glasgow Caledonian University",
+   "city_id": "glasgow",
+   "url": "https://www.gcu.ac.uk/"
+  },
+  {
+   "id": "university-of-birmingham",
+   "name": "University of Birmingham",
+   "city_id": "birmingham",
+   "url": "https://www.birmingham.ac.uk/"
+  },
+  {
+   "id": "aston-university",
+   "name": "Aston University",
+   "city_id": "birmingham",
+   "url": "https://www.aston.ac.uk/"
+  },
+  {
+   "id": "birmingham-city-university",
+   "name": "Birmingham City University",
+   "city_id": "birmingham",
+   "url": "https://www.bcu.ac.uk/"
+  },
+  {
+   "id": "university-of-liverpool",
+   "name": "University of Liverpool",
+   "city_id": "liverpool",
+   "url": "https://www.liverpool.ac.uk/"
+  },
+  {
+   "id": "liverpool-john-moores-university",
+   "name": "Liverpool John Moores University",
+   "city_id": "liverpool",
+   "url": "https://www.ljmu.ac.uk/"
+  },
+  {
+   "id": "university-of-sheffield",
+   "name": "University of Sheffield",
+   "city_id": "sheffield",
+   "url": "https://www.sheffield.ac.uk/"
+  },
+  {
+   "id": "sheffield-hallam-university",
+   "name": "Sheffield Hallam University",
+   "city_id": "sheffield",
+   "url": "https://www.shu.ac.uk/"
+  },
+  {
+   "id": "university-of-nottingham",
+   "name": "University of Nottingham",
+   "city_id": "nottingham",
+   "url": "https://www.nottingham.ac.uk/"
+  },
+  {
+   "id": "nottingham-trent-university",
+   "name": "Nottingham Trent University",
+   "city_id": "nottingham",
+   "url": "https://www.ntu.ac.uk/"
+  },
+  {
+   "id": "newcastle-university",
+   "name": "Newcastle University",
+   "city_id": "newcastle",
+   "url": "https://www.ncl.ac.uk/"
+  },
+  {
+   "id": "northumbria-university",
+   "name": "Northumbria University",
+   "city_id": "newcastle",
+   "url": "https://www.northumbria.ac.uk/"
+  },
+  {
+   "id": "university-of-southampton",
+   "name": "University of Southampton",
+   "city_id": "southampton",
+   "url": "https://www.southampton.ac.uk/"
+  },
+  {
+   "id": "solent-university",
+   "name": "Solent University",
+   "city_id": "southampton",
+   "url": "https://www.solent.ac.uk/"
+  },
+  {
+   "id": "cardiff-university",
+   "name": "Cardiff University",
+   "city_id": "cardiff",
+   "url": "https://www.cardiff.ac.uk/"
+  },
+  {
+   "id": "cardiff-metropolitan-university",
+   "name": "Cardiff Metropolitan University",
+   "city_id": "cardiff",
+   "url": "https://www.cardiffmet.ac.uk/"
+  },
+  {
+   "id": "queen-s-university-belfast",
+   "name": "Queen's University Belfast",
+   "city_id": "belfast",
+   "url": "https://www.qub.ac.uk/"
+  },
+  {
+   "id": "ulster-university",
+   "name": "Ulster University",
+   "city_id": "belfast",
+   "url": "https://www.ulster.ac.uk/"
+  },
+  {
+   "id": "university-of-warwick",
+   "name": "University of Warwick",
+   "city_id": "coventry",
+   "url": "https://www.warwick.ac.uk/"
+  },
+  {
+   "id": "coventry-university",
+   "name": "Coventry University",
+   "city_id": "coventry",
+   "url": "https://www.coventry.ac.uk/"
+  },
+  {
+   "id": "university-of-bath",
+   "name": "University of Bath",
+   "city_id": "bath",
+   "url": "https://www.bath.ac.uk/"
+  },
+  {
+   "id": "bath-spa-university",
+   "name": "Bath Spa University",
+   "city_id": "bath",
+   "url": "https://www.bathspa.ac.uk/"
+  },
+  {
+   "id": "university-of-exeter",
+   "name": "University of Exeter",
+   "city_id": "exeter",
+   "url": "https://www.exeter.ac.uk/"
+  },
+  {
+   "id": "university-of-york",
+   "name": "University of York",
+   "city_id": "york",
+   "url": "https://www.york.ac.uk/"
+  },
+  {
+   "id": "york-st-john-university",
+   "name": "York St John University",
+   "city_id": "york",
+   "url": "https://www.yorksj.ac.uk/"
+  },
+  {
+   "id": "durham-university",
+   "name": "Durham University",
+   "city_id": "durham",
+   "url": "https://www.durham.ac.uk/"
+  },
+  {
+   "id": "lancaster-university",
+   "name": "Lancaster University",
+   "city_id": "lancaster",
+   "url": "https://www.lancaster.ac.uk/"
+  },
+  {
+   "id": "university-of-leicester",
+   "name": "University of Leicester",
+   "city_id": "leicester",
+   "url": "https://www.le.ac.uk/"
+  },
+  {
+   "id": "de-montfort-university",
+   "name": "De Montfort University",
+   "city_id": "leicester",
+   "url": "https://www.dmu.ac.uk/"
+  },
+  {
+   "id": "loughborough-university",
+   "name": "Loughborough University",
+   "city_id": "loughborough",
+   "url": "https://www.lboro.ac.uk/"
+  },
+  {
+   "id": "university-of-reading",
+   "name": "University of Reading",
+   "city_id": "reading",
+   "url": "https://www.reading.ac.uk/"
+  },
+  {
+   "id": "university-of-surrey",
+   "name": "University of Surrey",
+   "city_id": "guildford",
+   "url": "https://www.surrey.ac.uk/"
+  },
+  {
+   "id": "university-of-sussex",
+   "name": "University of Sussex",
+   "city_id": "brighton",
+   "url": "https://www.sussex.ac.uk/"
+  },
+  {
+   "id": "university-of-brighton",
+   "name": "University of Brighton",
+   "city_id": "brighton",
+   "url": "https://www.brighton.ac.uk/"
+  },
+  {
+   "id": "university-of-kent",
+   "name": "University of Kent",
+   "city_id": "canterbury",
+   "url": "https://www.kent.ac.uk/"
+  },
+  {
+   "id": "canterbury-christ-church-university",
+   "name": "Canterbury Christ Church University",
+   "city_id": "canterbury",
+   "url": "https://www.canterbury.ac.uk/"
+  },
+  {
+   "id": "university-of-essex",
+   "name": "University of Essex",
+   "city_id": "colchester",
+   "url": "https://www.essex.ac.uk/"
+  },
+  {
+   "id": "university-of-east-anglia",
+   "name": "University of East Anglia (UEA)",
+   "city_id": "norwich",
+   "url": "https://www.uea.ac.uk/"
+  },
+  {
+   "id": "university-of-st-andrews",
+   "name": "University of St Andrews",
+   "city_id": "st-andrews",
+   "url": "https://www.st-andrews.ac.uk/"
+  },
+  {
+   "id": "university-of-aberdeen",
+   "name": "University of Aberdeen",
+   "city_id": "aberdeen",
+   "url": "https://www.abdn.ac.uk/"
+  },
+  {
+   "id": "robert-gordon-university",
+   "name": "Robert Gordon University",
+   "city_id": "aberdeen",
+   "url": "https://www.rgu.ac.uk/"
+  },
+  {
+   "id": "university-of-dundee",
+   "name": "University of Dundee",
+   "city_id": "dundee",
+   "url": "https://www.dundee.ac.uk/"
+  },
+  {
+   "id": "abertay-university",
+   "name": "Abertay University",
+   "city_id": "dundee",
+   "url": "https://www.abertay.ac.uk/"
+  },
+  {
+   "id": "university-of-stirling",
+   "name": "University of Stirling",
+   "city_id": "stirling",
+   "url": "https://www.stir.ac.uk/"
+  },
+  {
+   "id": "swansea-university",
+   "name": "Swansea University",
+   "city_id": "swansea",
+   "url": "https://www.swansea.ac.uk/"
+  },
+  {
+   "id": "aberystwyth-university",
+   "name": "Aberystwyth University",
+   "city_id": "aberystwyth",
+   "url": "https://www.aber.ac.uk/"
+  },
+  {
+   "id": "bangor-university",
+   "name": "Bangor University",
+   "city_id": "bangor",
+   "url": "https://www.bangor.ac.uk/"
+  },
+  {
+   "id": "university-of-hull",
+   "name": "University of Hull",
+   "city_id": "hull",
+   "url": "https://www.hull.ac.uk/"
+  },
+  {
+   "id": "university-of-bradford",
+   "name": "University of Bradford",
+   "city_id": "bradford",
+   "url": "https://www.bradford.ac.uk/"
+  },
+  {
+   "id": "university-of-huddersfield",
+   "name": "University of Huddersfield",
+   "city_id": "huddersfield",
+   "url": "https://www.hud.ac.uk/"
+  },
+  {
+   "id": "university-of-plymouth",
+   "name": "University of Plymouth",
+   "city_id": "plymouth",
+   "url": "https://www.plymouth.ac.uk/"
+  },
+  {
+   "id": "university-of-portsmouth",
+   "name": "University of Portsmouth",
+   "city_id": "portsmouth",
+   "url": "https://www.port.ac.uk/"
+  },
+  {
+   "id": "bournemouth-university",
+   "name": "Bournemouth University",
+   "city_id": "bournemouth",
+   "url": "https://www.bournemouth.ac.uk/"
+  },
+  {
+   "id": "keele-university",
+   "name": "Keele University",
+   "city_id": "stoke",
+   "url": "https://www.keele.ac.uk/"
+  },
+  {
+   "id": "staffordshire-university",
+   "name": "Staffordshire University",
+   "city_id": "stoke",
+   "url": "https://www.staffs.ac.uk/"
+  },
+  {
+   "id": "university-of-derby",
+   "name": "University of Derby",
+   "city_id": "derby",
+   "url": "https://www.derby.ac.uk/"
+  },
+  {
+   "id": "university-of-lincoln",
+   "name": "University of Lincoln",
+   "city_id": "lincoln",
+   "url": "https://www.lincoln.ac.uk/"
+  },
+  {
+   "id": "university-of-sunderland",
+   "name": "University of Sunderland",
+   "city_id": "sunderland",
+   "url": "https://www.sunderland.ac.uk/"
+  },
+  {
+   "id": "teesside-university",
+   "name": "Teesside University",
+   "city_id": "middlesbrough",
+   "url": "https://www.tees.ac.uk/"
+  },
+  {
+   "id": "university-of-wolverhampton",
+   "name": "University of Wolverhampton",
+   "city_id": "wolverhampton",
+   "url": "https://www.wlv.ac.uk/"
+  },
+  {
+   "id": "university-of-hertfordshire",
+   "name": "University of Hertfordshire",
+   "city_id": "hatfield",
+   "url": "https://www.herts.ac.uk/"
+  },
+  {
+   "id": "university-of-bedfordshire",
+   "name": "University of Bedfordshire",
+   "city_id": "luton",
+   "url": "https://www.beds.ac.uk/"
+  },
+  {
+   "id": "university-of-northampton",
+   "name": "University of Northampton",
+   "city_id": "northampton",
+   "url": "https://www.northampton.ac.uk/"
+  },
+  {
+   "id": "university-of-chester",
+   "name": "University of Chester",
+   "city_id": "chester",
+   "url": "https://www.chester.ac.uk/"
+  },
+  {
+   "id": "university-of-central-lancashire",
+   "name": "University of Central Lancashire (UCLan)",
+   "city_id": "preston",
+   "url": "https://www.uclan.ac.uk/"
+  },
+  {
+   "id": "university-of-bolton",
+   "name": "University of Bolton",
+   "city_id": "bolton",
+   "url": "https://www.bolton.ac.uk/"
+  },
+  {
+   "id": "university-of-worcester",
+   "name": "University of Worcester",
+   "city_id": "worcester",
+   "url": "https://www.worc.ac.uk/"
+  },
+  {
+   "id": "university-of-gloucestershire",
+   "name": "University of Gloucestershire",
+   "city_id": "cheltenham",
+   "url": "https://www.glos.ac.uk/"
+  },
+  {
+   "id": "cranfield-university",
+   "name": "Cranfield University",
+   "city_id": "cranfield",
+   "url": "https://www.cranfield.ac.uk/"
+  },
+  {
+   "id": "university-of-buckingham",
+   "name": "University of Buckingham",
+   "city_id": "buckingham",
+   "url": "https://www.buckingham.ac.uk/"
+  },
+  {
+   "id": "university-of-winchester",
+   "name": "University of Winchester",
+   "city_id": "winchester",
+   "url": "https://www.winchester.ac.uk/"
+  },
+  {
+   "id": "university-of-chichester",
+   "name": "University of Chichester",
+   "city_id": "chichester",
+   "url": "https://www.chi.ac.uk/"
+  }
+ ]
+}

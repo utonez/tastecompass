@@ -1,0 +1,683 @@
+{
+ "_meta": {
+  "description": "UK cities with at least one university. qloo_location is sent as filter.location.query; lat/lon (city centre) pick the UK-wide heatmap cells within 10 km. fallback_tags and cost_tier are DRAFT editorial labels, filled only for the first six cities; cost_tier null = unknown (scored neutral).",
+  "cost_tier_scale": "1 = cheapest, 5 = most expensive (relative rent and living cost among these cities, draft)",
+  "taste_ranked": "Only the 24 major student cities are ranked on taste: in smaller towns Qloo's heatmap mostly reflects how busy an area is, which put places like Bolton above Bristol for an indie/street-art profile (checked 10/27). Universities in every city are still listed."
+ },
+ "cities": [
+  {
+   "id": "london",
+   "name": "London",
+   "qloo_location": "London, United Kingdom",
+   "lat": 51.5074,
+   "lon": -0.1278,
+   "cost_tier": 5,
+   "fallback_tags": [
+    "museums",
+    "theatre",
+    "nightlife",
+    "fine dining",
+    "startups",
+    "finance",
+    "live music",
+    "multicultural food"
+   ],
+   "taste_ranked": true
+  },
+  {
+   "id": "manchester",
+   "name": "Manchester",
+   "qloo_location": "Manchester, United Kingdom",
+   "lat": 53.4808,
+   "lon": -2.2426,
+   "cost_tier": 3,
+   "fallback_tags": [
+    "live music",
+    "football",
+    "nightlife",
+    "indie",
+    "street food",
+    "startups"
+   ],
+   "taste_ranked": true
+  },
+  {
+   "id": "bristol",
+   "name": "Bristol",
+   "qloo_location": "Bristol, United Kingdom",
+   "lat": 51.4545,
+   "lon": -2.5879,
+   "cost_tier": 4,
+   "fallback_tags": [
+    "street art",
+    "indie",
+    "cafes",
+    "outdoors",
+    "live music",
+    "vegetarian"
+   ],
+   "taste_ranked": true
+  },
+  {
+   "id": "leeds",
+   "name": "Leeds",
+   "qloo_location": "Leeds, United Kingdom",
+   "lat": 53.8008,
+   "lon": -1.5491,
+   "cost_tier": 2,
+   "fallback_tags": [
+    "nightlife",
+    "shopping",
+    "live music",
+    "outdoors",
+    "cafes"
+   ],
+   "taste_ranked": true
+  },
+  {
+   "id": "edinburgh",
+   "name": "Edinburgh",
+   "qloo_location": "Edinburgh, United Kingdom",
+   "lat": 55.9533,
+   "lon": -3.1883,
+   "cost_tier": 4,
+   "fallback_tags": [
+    "history",
+    "festivals",
+    "theatre",
+    "outdoors",
+    "hiking",
+    "literature",
+    "cafes"
+   ],
+   "taste_ranked": true
+  },
+  {
+   "id": "glasgow",
+   "name": "Glasgow",
+   "qloo_location": "Glasgow, United Kingdom",
+   "lat": 55.8642,
+   "lon": -4.2518,
+   "cost_tier": 2,
+   "fallback_tags": [
+    "live music",
+    "indie",
+    "art",
+    "nightlife",
+    "outdoors",
+    "street food"
+   ],
+   "taste_ranked": true
+  },
+  {
+   "id": "oxford",
+   "name": "Oxford",
+   "qloo_location": "Oxford, United Kingdom",
+   "lat": 51.752,
+   "lon": -1.2577,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": true
+  },
+  {
+   "id": "cambridge",
+   "name": "Cambridge",
+   "qloo_location": "Cambridge, United Kingdom",
+   "lat": 52.2053,
+   "lon": 0.1218,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": true
+  },
+  {
+   "id": "birmingham",
+   "name": "Birmingham",
+   "qloo_location": "Birmingham, United Kingdom",
+   "lat": 52.4862,
+   "lon": -1.8904,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": true
+  },
+  {
+   "id": "liverpool",
+   "name": "Liverpool",
+   "qloo_location": "Liverpool, United Kingdom",
+   "lat": 53.4084,
+   "lon": -2.9916,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": true
+  },
+  {
+   "id": "sheffield",
+   "name": "Sheffield",
+   "qloo_location": "Sheffield, United Kingdom",
+   "lat": 53.3811,
+   "lon": -1.4701,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": true
+  },
+  {
+   "id": "nottingham",
+   "name": "Nottingham",
+   "qloo_location": "Nottingham, United Kingdom",
+   "lat": 52.9548,
+   "lon": -1.1581,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": true
+  },
+  {
+   "id": "newcastle",
+   "name": "Newcastle upon Tyne",
+   "qloo_location": "Newcastle upon Tyne, United Kingdom",
+   "lat": 54.9783,
+   "lon": -1.6178,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": true
+  },
+  {
+   "id": "southampton",
+   "name": "Southampton",
+   "qloo_location": "Southampton, United Kingdom",
+   "lat": 50.9097,
+   "lon": -1.4044,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": true
+  },
+  {
+   "id": "cardiff",
+   "name": "Cardiff",
+   "qloo_location": "Cardiff, United Kingdom",
+   "lat": 51.4816,
+   "lon": -3.1791,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": true
+  },
+  {
+   "id": "belfast",
+   "name": "Belfast",
+   "qloo_location": "Belfast, United Kingdom",
+   "lat": 54.5973,
+   "lon": -5.9301,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": true
+  },
+  {
+   "id": "coventry",
+   "name": "Coventry",
+   "qloo_location": "Coventry, United Kingdom",
+   "lat": 52.4068,
+   "lon": -1.5197,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": true
+  },
+  {
+   "id": "bath",
+   "name": "Bath",
+   "qloo_location": "Bath, United Kingdom",
+   "lat": 51.3811,
+   "lon": -2.359,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": true
+  },
+  {
+   "id": "exeter",
+   "name": "Exeter",
+   "qloo_location": "Exeter, United Kingdom",
+   "lat": 50.7184,
+   "lon": -3.5339,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": true
+  },
+  {
+   "id": "york",
+   "name": "York",
+   "qloo_location": "York, United Kingdom",
+   "lat": 53.96,
+   "lon": -1.0873,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": true
+  },
+  {
+   "id": "durham",
+   "name": "Durham",
+   "qloo_location": "Durham, United Kingdom",
+   "lat": 54.7761,
+   "lon": -1.5733,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": true
+  },
+  {
+   "id": "lancaster",
+   "name": "Lancaster",
+   "qloo_location": "Lancaster, United Kingdom",
+   "lat": 54.0466,
+   "lon": -2.8007,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": true
+  },
+  {
+   "id": "leicester",
+   "name": "Leicester",
+   "qloo_location": "Leicester, United Kingdom",
+   "lat": 52.6369,
+   "lon": -1.1398,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": false
+  },
+  {
+   "id": "loughborough",
+   "name": "Loughborough",
+   "qloo_location": "Loughborough, United Kingdom",
+   "lat": 52.7721,
+   "lon": -1.2062,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": false
+  },
+  {
+   "id": "reading",
+   "name": "Reading",
+   "qloo_location": "Reading, United Kingdom",
+   "lat": 51.4543,
+   "lon": -0.9781,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": false
+  },
+  {
+   "id": "guildford",
+   "name": "Guildford",
+   "qloo_location": "Guildford, United Kingdom",
+   "lat": 51.2362,
+   "lon": -0.5704,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": false
+  },
+  {
+   "id": "brighton",
+   "name": "Brighton",
+   "qloo_location": "Brighton, United Kingdom",
+   "lat": 50.8225,
+   "lon": -0.1372,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": true
+  },
+  {
+   "id": "canterbury",
+   "name": "Canterbury",
+   "qloo_location": "Canterbury, United Kingdom",
+   "lat": 51.2802,
+   "lon": 1.0789,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": false
+  },
+  {
+   "id": "colchester",
+   "name": "Colchester",
+   "qloo_location": "Colchester, United Kingdom",
+   "lat": 51.8959,
+   "lon": 0.8919,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": false
+  },
+  {
+   "id": "norwich",
+   "name": "Norwich",
+   "qloo_location": "Norwich, United Kingdom",
+   "lat": 52.6309,
+   "lon": 1.2974,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": false
+  },
+  {
+   "id": "st-andrews",
+   "name": "St Andrews",
+   "qloo_location": "St Andrews, United Kingdom",
+   "lat": 56.3398,
+   "lon": -2.7967,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": true
+  },
+  {
+   "id": "aberdeen",
+   "name": "Aberdeen",
+   "qloo_location": "Aberdeen, United Kingdom",
+   "lat": 57.1497,
+   "lon": -2.0943,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": false
+  },
+  {
+   "id": "dundee",
+   "name": "Dundee",
+   "qloo_location": "Dundee, United Kingdom",
+   "lat": 56.462,
+   "lon": -2.9707,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": false
+  },
+  {
+   "id": "stirling",
+   "name": "Stirling",
+   "qloo_location": "Stirling, United Kingdom",
+   "lat": 56.1165,
+   "lon": -3.9369,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": false
+  },
+  {
+   "id": "swansea",
+   "name": "Swansea",
+   "qloo_location": "Swansea, United Kingdom",
+   "lat": 51.6214,
+   "lon": -3.9436,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": false
+  },
+  {
+   "id": "aberystwyth",
+   "name": "Aberystwyth",
+   "qloo_location": "Aberystwyth, United Kingdom",
+   "lat": 52.4153,
+   "lon": -4.0829,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": false
+  },
+  {
+   "id": "bangor",
+   "name": "Bangor",
+   "qloo_location": "Bangor, United Kingdom",
+   "lat": 53.2274,
+   "lon": -4.1293,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": false
+  },
+  {
+   "id": "hull",
+   "name": "Hull",
+   "qloo_location": "Hull, United Kingdom",
+   "lat": 53.7676,
+   "lon": -0.3274,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": false
+  },
+  {
+   "id": "bradford",
+   "name": "Bradford",
+   "qloo_location": "Bradford, United Kingdom",
+   "lat": 53.796,
+   "lon": -1.7594,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": false
+  },
+  {
+   "id": "huddersfield",
+   "name": "Huddersfield",
+   "qloo_location": "Huddersfield, United Kingdom",
+   "lat": 53.6458,
+   "lon": -1.785,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": false
+  },
+  {
+   "id": "plymouth",
+   "name": "Plymouth",
+   "qloo_location": "Plymouth, United Kingdom",
+   "lat": 50.3755,
+   "lon": -4.1427,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": false
+  },
+  {
+   "id": "portsmouth",
+   "name": "Portsmouth",
+   "qloo_location": "Portsmouth, United Kingdom",
+   "lat": 50.8198,
+   "lon": -1.088,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": false
+  },
+  {
+   "id": "bournemouth",
+   "name": "Bournemouth",
+   "qloo_location": "Bournemouth, United Kingdom",
+   "lat": 50.7192,
+   "lon": -1.8808,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": false
+  },
+  {
+   "id": "stoke",
+   "name": "Stoke-on-Trent",
+   "qloo_location": "Stoke-on-Trent, United Kingdom",
+   "lat": 53.0027,
+   "lon": -2.1794,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": false
+  },
+  {
+   "id": "derby",
+   "name": "Derby",
+   "qloo_location": "Derby, United Kingdom",
+   "lat": 52.9225,
+   "lon": -1.4746,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": false
+  },
+  {
+   "id": "lincoln",
+   "name": "Lincoln",
+   "qloo_location": "Lincoln, United Kingdom",
+   "lat": 53.2307,
+   "lon": -0.5406,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": false
+  },
+  {
+   "id": "sunderland",
+   "name": "Sunderland",
+   "qloo_location": "Sunderland, United Kingdom",
+   "lat": 54.9069,
+   "lon": -1.3838,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": false
+  },
+  {
+   "id": "middlesbrough",
+   "name": "Middlesbrough",
+   "qloo_location": "Middlesbrough, United Kingdom",
+   "lat": 54.5742,
+   "lon": -1.235,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": false
+  },
+  {
+   "id": "wolverhampton",
+   "name": "Wolverhampton",
+   "qloo_location": "Wolverhampton, United Kingdom",
+   "lat": 52.5862,
+   "lon": -2.1288,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": false
+  },
+  {
+   "id": "hatfield",
+   "name": "Hatfield",
+   "qloo_location": "Hatfield, United Kingdom",
+   "lat": 51.7634,
+   "lon": -0.2231,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": false
+  },
+  {
+   "id": "luton",
+   "name": "Luton",
+   "qloo_location": "Luton, United Kingdom",
+   "lat": 51.8787,
+   "lon": -0.42,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": false
+  },
+  {
+   "id": "northampton",
+   "name": "Northampton",
+   "qloo_location": "Northampton, United Kingdom",
+   "lat": 52.2405,
+   "lon": -0.9027,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": false
+  },
+  {
+   "id": "chester",
+   "name": "Chester",
+   "qloo_location": "Chester, United Kingdom",
+   "lat": 53.1934,
+   "lon": -2.8931,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": false
+  },
+  {
+   "id": "preston",
+   "name": "Preston",
+   "qloo_location": "Preston, United Kingdom",
+   "lat": 53.7632,
+   "lon": -2.7031,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": false
+  },
+  {
+   "id": "bolton",
+   "name": "Bolton",
+   "qloo_location": "Bolton, United Kingdom",
+   "lat": 53.5769,
+   "lon": -2.4282,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": false
+  },
+  {
+   "id": "worcester",
+   "name": "Worcester",
+   "qloo_location": "Worcester, United Kingdom",
+   "lat": 52.192,
+   "lon": -2.22,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": false
+  },
+  {
+   "id": "cheltenham",
+   "name": "Cheltenham",
+   "qloo_location": "Cheltenham, United Kingdom",
+   "lat": 51.8994,
+   "lon": -2.0783,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": false
+  },
+  {
+   "id": "cranfield",
+   "name": "Cranfield",
+   "qloo_location": "Cranfield, United Kingdom",
+   "lat": 52.0738,
+   "lon": -0.629,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": false
+  },
+  {
+   "id": "buckingham",
+   "name": "Buckingham",
+   "qloo_location": "Buckingham, United Kingdom",
+   "lat": 51.9994,
+   "lon": -0.987,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": false
+  },
+  {
+   "id": "egham",
+   "name": "Egham",
+   "qloo_location": "Egham, United Kingdom",
+   "lat": 51.4256,
+   "lon": -0.563,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": false
+  },
+  {
+   "id": "uxbridge",
+   "name": "Uxbridge",
+   "qloo_location": "Uxbridge, United Kingdom",
+   "lat": 51.5461,
+   "lon": -0.4784,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": false
+  },
+  {
+   "id": "winchester",
+   "name": "Winchester",
+   "qloo_location": "Winchester, United Kingdom",
+   "lat": 51.0632,
+   "lon": -1.308,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": false
+  },
+  {
+   "id": "chichester",
+   "name": "Chichester",
+   "qloo_location": "Chichester, United Kingdom",
+   "lat": 50.8365,
+   "lon": -0.7792,
+   "cost_tier": null,
+   "fallback_tags": [],
+   "taste_ranked": false
+  }
+ ]
+}

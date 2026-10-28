@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: tastecompass
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: python web.py --host 0.0.0.0
+    healthCheckPath: /healthz
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.7
+      - key: QLOO_API_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false

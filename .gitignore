@@ -1,0 +1,6 @@
+__pycache__/
+.qloo_cache/
+_backup_1027/
+.env
+out/
+*.pyc

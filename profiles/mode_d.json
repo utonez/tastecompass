@@ -1,0 +1,10 @@
+{
+  "_comment": "Mode D: programmes already decided; agent checks fit, plans deadlines, suggests better-fitting alternatives.",
+  "interests": ["Les Misérables", "Harry Potter", "Hiking", "Specialty coffee"],
+  "field_interests": ["fintech", "machine learning"],
+  "tuition_budget_gbp": 36000,
+  "ielts": {"overall": 6.5, "min_component": 6.0},
+  "target_intake": 2027,
+  "scope": {"country": "UK", "program_ids": ["ed-ftp", "leeds-misdi"]},
+  "weights": {"taste": 0.3, "academic": 0.4, "budget": 0.2, "language": 0.1}
+}
